@@ -1,5 +1,11 @@
 package Code.map_handling;
 import Code.Vector2d;
-public class MapObject {
-    Vector2d pos;
+public abstract class MapObject {
+    private Vector2d position;
+
+    public Vector2d getPosition(){
+        return position;
+    }
+
+    public abstract String getResourcePath();
 }
