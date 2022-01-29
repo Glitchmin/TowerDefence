@@ -28,7 +28,10 @@ public class App extends Application {
         mapVisualizer = new MapVisualizer(map, mapWidth / map.getWidth(), mapHeight / map.getHeight());
         gridPaneOfEverything.add(mapVisualizer.getMapGridPane(), 0, 0);
         gridPaneOfEverything.add(new Label("hmm"), 0, 1);
-        gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 1, 0);
+        gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 2, 0);
+
+        TurretShop turretShop = new TurretShop((1400 - 1200) / 2);
+        gridPaneOfEverything.add(turretShop.getGridPane(), 1, 0);
     }
 
     @Override

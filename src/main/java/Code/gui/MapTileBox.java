@@ -17,22 +17,10 @@ public class MapTileBox {
     private final VBox vBox;
     private static Integer width;
     private static Integer height;
-    private static final Map<String, Image> imagesMap = new HashMap<>();
 
-    public MapTileBox(AbstractMapObject element){
-        Image image=null;
-        if (imagesMap.get(element.getResourcePath()) != null) {
-            image = imagesMap.get(element.getResourcePath());
-        } else {
-            try {
-                image = new Image(new FileInputStream(element.getResourcePath()));
-            } catch (FileNotFoundException e) {
-                out.println("couldn't find " + element.getResourcePath());
-                e.printStackTrace();
-            }
-        }
-        imagesMap.put(element.getResourcePath(), image);
-        ImageView imageView = new ImageView(image);
+
+    public MapTileBox(AbstractMapObject element) {
+        ImageView imageView = new ImageView(ImageLoader.loadImage(element.getResourcePath()));
         imageView.setFitWidth(width);
         imageView.setFitHeight(height);
         vBox = new VBox(imageView);
