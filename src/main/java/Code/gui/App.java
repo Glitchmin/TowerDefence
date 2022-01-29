@@ -15,13 +15,16 @@ public class App extends Application {
     private Stage primaryStage;
     private final static int windowWidth = 1400;
     private final static int windowHeight = 800;
+    private final static int mapWidth = 1200;
+    private final static int mapHeight = 600;
     private MapVisualizer mapVisualizer;
 
     @Override
     public void init() {
         out.println("init");
         gridPaneOfEverything = new GridPane();
-        mapVisualizer = new MapVisualizer(new Map(30,15),1200/30,600/15);
+        Map map = new Map(0);
+        mapVisualizer = new MapVisualizer(map,mapWidth/map.getWidth(),mapHeight/map.getHeight());
         gridPaneOfEverything.add(mapVisualizer.getMapGridPane(),0,0);
     }
 
