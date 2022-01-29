@@ -19,7 +19,7 @@ public class Map {
     }
 
     private void getLandscapeFromFile(int file_number) {
-        //taken from https://techvidvan.com/tutorials/read-csv-file-in-java/
+        //based on https://techvidvan.com/tutorials/read-csv-file-in-java/
         try {
             File file = new File("src/main/resources/landscape/landscape" + file_number + ".csv");
             FileReader fr = new FileReader(file);

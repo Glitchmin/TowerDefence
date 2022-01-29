@@ -13,13 +13,13 @@ import java.util.Map;
 
 import static java.lang.System.out;
 
-public class GuiElementBox {
+public class MapTileBox {
     private final VBox vBox;
     private static Integer width;
     private static Integer height;
     private static final Map<String, Image> imagesMap = new HashMap<>();
 
-    public GuiElementBox(AbstractMapObject element){
+    public MapTileBox(AbstractMapObject element){
         Image image=null;
         if (imagesMap.get(element.getResourcePath()) != null) {
             image = imagesMap.get(element.getResourcePath());
@@ -42,11 +42,11 @@ public class GuiElementBox {
     }
 
     public static void setWidth(Integer width) {
-        GuiElementBox.width = width;
+        MapTileBox.width = width;
     }
 
     public static void setHeight(Integer height) {
-        GuiElementBox.height = height;
+        MapTileBox.height = height;
     }
 
     public VBox getVBox() {

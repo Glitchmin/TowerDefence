@@ -4,6 +4,7 @@ import Code.map_handling.Map;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -24,8 +25,10 @@ public class App extends Application {
         out.println("init");
         gridPaneOfEverything = new GridPane();
         Map map = new Map(0);
-        mapVisualizer = new MapVisualizer(map,mapWidth/map.getWidth(),mapHeight/map.getHeight());
-        gridPaneOfEverything.add(mapVisualizer.getMapGridPane(),0,0);
+        mapVisualizer = new MapVisualizer(map, mapWidth / map.getWidth(), mapHeight / map.getHeight());
+        gridPaneOfEverything.add(mapVisualizer.getMapGridPane(), 0, 0);
+        gridPaneOfEverything.add(new Label("hmm"), 0, 1);
+        gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 1, 0);
     }
 
     @Override
