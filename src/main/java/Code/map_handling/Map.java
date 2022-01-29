@@ -43,7 +43,7 @@ public class Map {
             }
             br.close();
         } catch (IOException ioe) {
-            out.println("couldn't find src/main/resources/landscape/landscape.csv");
+            out.println("couldn't find src/main/resources/landscape/landscape" + file_number + ".csv");
             ioe.printStackTrace();
         }
     }

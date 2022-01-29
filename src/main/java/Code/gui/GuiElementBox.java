@@ -1,6 +1,6 @@
 package Code.gui;
 
-import Code.map_handling.MapObject;
+import Code.map_handling.AbstractMapObject;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,7 +19,7 @@ public class GuiElementBox {
     private static Integer height;
     private static final Map<String, Image> imagesMap = new HashMap<>();
 
-    public GuiElementBox(MapObject element){
+    public GuiElementBox(AbstractMapObject element){
         Image image=null;
         if (imagesMap.get(element.getResourcePath()) != null) {
             image = imagesMap.get(element.getResourcePath());

@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import static java.lang.System.out;
 
 public class MapVisualizer {
-    private GridPane mapGridPane;
+    private final GridPane mapGridPane;
     private final Map map;
 
     public MapVisualizer(Map map, Integer guiElementBoxWidth, Integer guiElementBoxHeight) {
