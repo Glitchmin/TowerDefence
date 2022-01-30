@@ -1,6 +1,7 @@
 package Code.gui;
 
 import Code.map_handling.Map;
+import Code.map_handling.TurretBuilder;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -25,13 +26,17 @@ public class App extends Application {
         out.println("init");
         gridPaneOfEverything = new GridPane();
         Map map = new Map(0);
-        mapVisualizer = new MapVisualizer(map, mapWidth / map.getWidth(), mapHeight / map.getHeight());
+
+        TurretShop turretShop = new TurretShop((1400 - 1200) / 2);
+        TurretBuilder turretBuilder = new TurretBuilder(map, turretShop);
+        gridPaneOfEverything.add(turretShop.getVbox(), 1, 0);
+
+        mapVisualizer = new MapVisualizer(map,turretShop, mapWidth / map.getWidth(), mapHeight / map.getHeight(), turretBuilder);
         gridPaneOfEverything.add(mapVisualizer.getMapGridPane(), 0, 0);
         gridPaneOfEverything.add(new Label("hmm"), 0, 1);
         gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 2, 0);
 
-        TurretShop turretShop = new TurretShop((1400 - 1200)/2);
-        gridPaneOfEverything.add(turretShop.getVbox(), 1, 0);
+
     }
 
     @Override

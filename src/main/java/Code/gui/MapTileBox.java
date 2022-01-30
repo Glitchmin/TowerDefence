@@ -2,16 +2,8 @@ package Code.gui;
 
 import Code.map_handling.AbstractMapObject;
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.lang.System.out;
 
 public class MapTileBox {
     private final VBox vBox;

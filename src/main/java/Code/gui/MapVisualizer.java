@@ -1,23 +1,29 @@
 package Code.gui;
 
 import Code.map_handling.Map;
+import Code.map_handling.TurretBuilder;
+import Code.map_handling.TurretType;
+import Code.map_handling.turrets.LaserTurret;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-
-import static java.lang.System.out;
+import javafx.scene.layout.VBox;
 
 
 public class MapVisualizer {
     private final GridPane mapGridPane;
     private final Map map;
     private final MapTileBox[][] landscapeBoxes;
+    private final TurretShop turretShop;
     private Label landscapeNameOnCursorLabel;
+    private final TurretBuilder turretBuilder;
+    private VBox tmpTurret;
 
-    public MapVisualizer(Map map, Integer guiElementBoxWidth, Integer guiElementBoxHeight) {
+    public MapVisualizer(Map map, TurretShop turretShop, Integer guiElementBoxWidth, Integer guiElementBoxHeight, TurretBuilder turretBuilder) {
         landscapeNameOnCursorLabel = new Label("");
         MapTileBox.setWidth(guiElementBoxWidth);
         MapTileBox.setHeight(guiElementBoxHeight);
         this.map = map;
+        this.turretShop = turretShop;
         mapGridPane = new GridPane();
         landscapeBoxes = new MapTileBox[map.getWidth()][map.getHeight()];
         for (int i = 0; i < map.getWidth(); i++) {
@@ -25,19 +31,35 @@ public class MapVisualizer {
                 MapTileBox mapTileBox = new MapTileBox(map.getLandscape(i, j));
                 mapGridPane.add(mapTileBox.getVBox(), i, j);
                 landscapeBoxes[i][j] = mapTileBox;
-                mapTileBox.getVBox().setOnMouseEntered(Action -> setLandscapeNameOnCursorLabel(mapTileBox));
+                mapTileBox.getVBox().setOnMouseEntered(Action ->
+                {
+                    handleCursorOnMapTile(mapTileBox);
+                });
             }
         }
+        this.turretBuilder = turretBuilder;
     }
 
-    public void setLandscapeNameOnCursorLabel(MapTileBox mapTileBox) {
+    private void handleCursorOnMapTile(MapTileBox mapTileBox) {
         for (int i = 0; i < map.getWidth(); i++) {
             for (int j = 0; j < map.getHeight(); j++) {
                 if (mapTileBox == landscapeBoxes[i][j]) {
                     landscapeNameOnCursorLabel.setText
                             (map.getLandscape(i, j).landscapeType.toString() + " (" + i + "," + j + ")");
+                    showTurret(i, j);
                 }
             }
+        }
+    }
+
+    private void showTurret(int i, int j) {
+        mapGridPane.getChildren().remove(tmpTurret);
+        if (turretShop.getSelectedTurret() == TurretType.LASER) {
+            tmpTurret = new MapTileBox(new LaserTurret()).getVBox();
+            tmpTurret.setOpacity(0.5);
+            tmpTurret.setOnMouseClicked(Action -> {turretBuilder.build(new LaserTurret());
+                mapGridPane.add(new MapTileBox(new LaserTurret()).getVBox(),i,j);});
+            mapGridPane.add(tmpTurret, i, j);
         }
     }
 

@@ -4,4 +4,5 @@ public enum TurretType {
     LASER,
     MORTAR,
     ELECTRIC;
+
 }
