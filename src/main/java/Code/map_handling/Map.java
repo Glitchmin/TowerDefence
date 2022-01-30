@@ -12,10 +12,11 @@ public class Map {
     private Integer width;
     private Integer height;
     private Landscape[][] landscapesArray;
-    //private final MapObject[][] mapObjectsArray;
+    private final AbstractTurret[][] turretsArray;
 
     public Map(int file_number) {
         getLandscapeFromFile(file_number);
+        turretsArray = new AbstractTurret[width][height];
     }
 
     private void getLandscapeFromFile(int file_number) {
@@ -45,6 +46,13 @@ public class Map {
         } catch (IOException ioe) {
             out.println("couldn't find src/main/resources/landscape/landscape" + file_number + ".csv");
             ioe.printStackTrace();
+        }
+    }
+
+    public void buildTurret(int x, int y, AbstractTurret turret){
+        out.println(turretsArray[x][y]);
+        if (turretsArray[x][y]==null){
+            turretsArray[x][y] = turret;
         }
     }
 

@@ -1,5 +1,6 @@
 package Code.gui;
 
+import Code.PlayerValues;
 import Code.map_handling.Map;
 import Code.map_handling.TurretBuilder;
 import javafx.application.Application;
@@ -20,20 +21,23 @@ public class App extends Application {
     private final static int mapWidth = 1200;
     private final static int mapHeight = 600;
     private MapVisualizer mapVisualizer;
+    private PlayerValues playerValues;
 
     @Override
     public void init() {
         out.println("init");
         gridPaneOfEverything = new GridPane();
         Map map = new Map(0);
+        playerValues = new PlayerValues();
 
         TurretShop turretShop = new TurretShop((1400 - 1200) / 2);
-        TurretBuilder turretBuilder = new TurretBuilder(map, turretShop);
+        TurretBuilder turretBuilder = new TurretBuilder(map, turretShop, playerValues);
         gridPaneOfEverything.add(turretShop.getVbox(), 1, 0);
+
 
         mapVisualizer = new MapVisualizer(map,turretShop, mapWidth / map.getWidth(), mapHeight / map.getHeight(), turretBuilder);
         gridPaneOfEverything.add(mapVisualizer.getMapGridPane(), 0, 0);
-        gridPaneOfEverything.add(new Label("hmm"), 0, 1);
+        gridPaneOfEverything.add(new Label("gold: "+playerValues.getGold()), 0, 1);
         gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 2, 0);
 
 

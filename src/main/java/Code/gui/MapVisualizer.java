@@ -1,5 +1,6 @@
 package Code.gui;
 
+import Code.map_handling.LandscapeType;
 import Code.map_handling.Map;
 import Code.map_handling.TurretBuilder;
 import Code.map_handling.TurretType;
@@ -57,8 +58,12 @@ public class MapVisualizer {
         if (turretShop.getSelectedTurret() == TurretType.LASER) {
             tmpTurret = new MapTileBox(new LaserTurret()).getVBox();
             tmpTurret.setOpacity(0.5);
-            tmpTurret.setOnMouseClicked(Action -> {turretBuilder.build(new LaserTurret());
-                mapGridPane.add(new MapTileBox(new LaserTurret()).getVBox(),i,j);});
+            tmpTurret.setOnMouseClicked(Action -> {
+                if (map.getLandscape(i, j).landscapeType == LandscapeType.GRASS
+                        || map.getLandscape(i, j).landscapeType == LandscapeType.HILL) {
+                    turretBuilder.build(i, j, new LaserTurret());
+                }
+            });
             mapGridPane.add(tmpTurret, i, j);
         }
     }
