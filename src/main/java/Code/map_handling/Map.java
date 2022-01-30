@@ -1,10 +1,14 @@
 package Code.map_handling;
 
+import Code.gui.ITurretChangeObserver;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.System.out;
 
@@ -13,10 +17,12 @@ public class Map {
     private Integer height;
     private Landscape[][] landscapesArray;
     private final AbstractTurret[][] turretsArray;
+    private final List<ITurretChangeObserver> observersList;
 
     public Map(int file_number) {
         getLandscapeFromFile(file_number);
         turretsArray = new AbstractTurret[width][height];
+        observersList = new ArrayList<>();
     }
 
     private void getLandscapeFromFile(int file_number) {
@@ -49,16 +55,32 @@ public class Map {
         }
     }
 
-    public void buildTurret(int x, int y, AbstractTurret turret){
+    public void addObserver(ITurretChangeObserver turretChangeObserver) {
+        observersList.add(turretChangeObserver);
+    }
+
+    private void turretChanged(int x, int y) {
+        for (ITurretChangeObserver observer : observersList) {
+            observer.turretChanged(x, y);
+        }
+    }
+
+    public void buildTurret(int x, int y, AbstractTurret turret) {
         out.println(turretsArray[x][y]);
-        if (turretsArray[x][y]==null){
+        if (turretsArray[x][y] == null) {
             turretsArray[x][y] = turret;
+            turretChanged(x, y);
         }
     }
 
     public Landscape getLandscape(int x, int y) {
         return landscapesArray[x][y];
     }
+
+    public AbstractTurret getTurret(int x, int y) {
+        return turretsArray[x][y];
+    }
+
 
     public Integer getWidth() {
         return width;

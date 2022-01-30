@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import static java.lang.System.out;
@@ -22,6 +23,7 @@ public class App extends Application {
     private final static int mapHeight = 600;
     private MapVisualizer mapVisualizer;
     private PlayerValues playerValues;
+    private ValuesVisualizer valuesVisualizer;
 
     @Override
     public void init() {
@@ -35,13 +37,19 @@ public class App extends Application {
         gridPaneOfEverything.add(turretShop.getVbox(), 1, 0);
 
 
-        mapVisualizer = new MapVisualizer(map,turretShop, mapWidth / map.getWidth(), mapHeight / map.getHeight(), turretBuilder);
+        mapVisualizer = new MapVisualizer(map, turretShop, mapWidth / map.getWidth(), mapHeight / map.getHeight(), turretBuilder);
         gridPaneOfEverything.add(mapVisualizer.getMapGridPane(), 0, 0);
-        gridPaneOfEverything.add(new Label("gold: "+playerValues.getGold()), 0, 1);
+        valuesVisualizer = new ValuesVisualizer(playerValues);
+        playerValues.addObserver(valuesVisualizer);
+
+        gridPaneOfEverything.add(valuesVisualizer.getLabelsVBox(), 0, 1);
+        valuesVisualizer.valuesChanged();
         gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 2, 0);
+        map.addObserver(mapVisualizer);
 
 
     }
+
 
     @Override
     public void start(Stage primaryStage) {

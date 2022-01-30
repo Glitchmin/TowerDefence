@@ -9,11 +9,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
+import static java.lang.System.out;
 
-public class MapVisualizer {
+
+public class MapVisualizer implements ITurretChangeObserver {
     private final GridPane mapGridPane;
     private final Map map;
     private final MapTileBox[][] landscapeBoxes;
+    private final MapTileBox[][] turretBoxes;
     private final TurretShop turretShop;
     private Label landscapeNameOnCursorLabel;
     private final TurretBuilder turretBuilder;
@@ -26,7 +29,10 @@ public class MapVisualizer {
         this.map = map;
         this.turretShop = turretShop;
         mapGridPane = new GridPane();
+
         landscapeBoxes = new MapTileBox[map.getWidth()][map.getHeight()];
+        turretBoxes = new MapTileBox[map.getWidth()][map.getHeight()];
+
         for (int i = 0; i < map.getWidth(); i++) {
             for (int j = 0; j < map.getHeight(); j++) {
                 MapTileBox mapTileBox = new MapTileBox(map.getLandscape(i, j));
@@ -47,13 +53,14 @@ public class MapVisualizer {
                 if (mapTileBox == landscapeBoxes[i][j]) {
                     landscapeNameOnCursorLabel.setText
                             (map.getLandscape(i, j).landscapeType.toString() + " (" + i + "," + j + ")");
-                    showTurret(i, j);
+                    showTmpTurret(i, j);
                 }
             }
         }
     }
 
-    private void showTurret(int i, int j) {
+
+    private void showTmpTurret(int i, int j) {
         mapGridPane.getChildren().remove(tmpTurret);
         if (turretShop.getSelectedTurret() == TurretType.LASER) {
             tmpTurret = new MapTileBox(new LaserTurret()).getVBox();
@@ -76,4 +83,13 @@ public class MapVisualizer {
         return mapGridPane;
     }
 
+
+    @Override
+    public void turretChanged(int x, int y) {
+        if (turretBoxes[x][y]!=null) {
+            mapGridPane.getChildren().remove(turretBoxes[x][y].getVBox());
+        }
+        turretBoxes[x][y] = new MapTileBox(map.getTurret(x, y));
+        mapGridPane.add(turretBoxes[x][y].getVBox(), x, y);
+    }
 }
