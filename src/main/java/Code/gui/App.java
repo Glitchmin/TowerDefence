@@ -24,6 +24,7 @@ public class App extends Application {
     private MapVisualizer mapVisualizer;
     private PlayerValues playerValues;
     private ValuesVisualizer valuesVisualizer;
+    private TurretObserver turretObserver;
 
     @Override
     public void init() {
@@ -32,10 +33,10 @@ public class App extends Application {
         Map map = new Map(0);
         playerValues = new PlayerValues();
 
-        TurretShop turretShop = new TurretShop((1400 - 1200) / 2);
+        TurretObserver turretObserver = new TurretObserver();
+        TurretShop turretShop = new TurretShop((1400 - 1200) / 2, turretObserver);
         TurretBuilder turretBuilder = new TurretBuilder(map, turretShop, playerValues);
         gridPaneOfEverything.add(turretShop.getVbox(), 1, 0);
-
 
         mapVisualizer = new MapVisualizer(map, turretShop, mapWidth / map.getWidth(), mapHeight / map.getHeight(), turretBuilder);
         gridPaneOfEverything.add(mapVisualizer.getMapGridPane(), 0, 0);

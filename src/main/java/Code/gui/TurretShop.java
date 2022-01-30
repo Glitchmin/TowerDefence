@@ -9,8 +9,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-import static java.lang.System.out;
-
 public class TurretShop {
     private final GridPane gridPane;
     private final VBox shopVBox;
@@ -19,12 +17,14 @@ public class TurretShop {
     private VBox selected;
     private TurretType selectedTurret;
     private TurretType[][] turretTypes;
+    private final TurretObserver turretObserver;
 
-    public TurretShop(Integer columnWidth) {
+    public TurretShop(Integer columnWidth, TurretObserver turretObserver) {
         gridPane = new GridPane();
         selected = null;
         mark = null;
         this.imageSize = columnWidth;
+        this.turretObserver = turretObserver;
         Label nameLabel = new Label("turret shop:");
         nameLabel.setAlignment(Pos.BOTTOM_CENTER);
         nameLabel.setMinWidth(2 * columnWidth);
@@ -36,7 +36,7 @@ public class TurretShop {
         cancelImage.setFitWidth(imageSize * 2);
         cancelImage.setFitHeight(imageSize / 2);
         cancelImage.setOnMouseClicked(Action -> unMarkSelected());
-        shopVBox = new VBox(nameLabel, gridPane, cancelImage);
+        shopVBox = new VBox(nameLabel, gridPane, cancelImage,turretObserver.getVBox());
         shopVBox.setPrefWidth(columnWidth * 2);
     }
 
@@ -57,6 +57,7 @@ public class TurretShop {
             if (turret instanceof LaserTurret) {
                 selectedTurret = TurretType.LASER;
             }
+            turretObserver.updateVBox(selectedTurret.getNewTurret());
         }
     }
 
@@ -65,6 +66,7 @@ public class TurretShop {
     }
 
     public void unMarkSelected() {
+        turretObserver.updateVBox(null);
         gridPane.getChildren().remove(mark);
         mark = null;
         selected = null;

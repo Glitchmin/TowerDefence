@@ -8,4 +8,5 @@ public abstract class AbstractMapObject {
     }
 
     public abstract String getResourcePath();
+
 }
