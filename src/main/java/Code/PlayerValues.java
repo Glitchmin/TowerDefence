@@ -8,12 +8,14 @@ import java.util.List;
 public class PlayerValues {
     private Integer gold;
     private Integer mana;
+    private Integer health;
     private final List<IPlayerValuesChangeObserver> playerValuesChangeObserverList;
 
     public PlayerValues() {
         playerValuesChangeObserverList = new ArrayList<>();
-        gold = 100;
+        gold = 300;
         mana = 100;
+        health = 5;
     }
 
     public void addObserver(IPlayerValuesChangeObserver observer) {
@@ -38,6 +40,14 @@ public class PlayerValues {
     public void removeGold(Integer gold_decrease) {
         gold -= gold_decrease;
         valuesChanged();
+    }
+
+    public Integer getHealth() {
+        return health;
+    }
+
+    public boolean isPlayerDead(){
+        return health <= 0;
     }
 
     public Integer getMana() {

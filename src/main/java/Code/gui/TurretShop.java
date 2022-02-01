@@ -17,9 +17,9 @@ public class TurretShop {
     private VBox selected;
     private TurretType selectedTurret;
     private TurretType[][] turretTypes;
-    private final TurretObserver turretObserver;
+    private final TurretTracker turretObserver;
 
-    public TurretShop(Integer columnWidth, TurretObserver turretObserver) {
+    public TurretShop(Integer columnWidth, TurretTracker turretObserver) {
         gridPane = new GridPane();
         selected = null;
         mark = null;

@@ -18,11 +18,13 @@ public class Map {
     private Landscape[][] landscapesArray;
     private final AbstractTurret[][] turretsArray;
     private final List<ITurretChangeObserver> observersList;
+    private final List<Enemy> enemies;
 
     public Map(int file_number) {
         getLandscapeFromFile(file_number);
         turretsArray = new AbstractTurret[width][height];
         observersList = new ArrayList<>();
+        enemies = new ArrayList<>();
     }
 
     private void getLandscapeFromFile(int file_number) {
@@ -63,6 +65,10 @@ public class Map {
         for (ITurretChangeObserver observer : observersList) {
             observer.turretChanged(x, y);
         }
+    }
+
+    public void addEnemy(Enemy enemy){
+        enemies.add(enemy);
     }
 
     public void buildTurret(int x, int y, AbstractTurret turret) {

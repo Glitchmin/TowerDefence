@@ -7,8 +7,15 @@ public abstract class AbstractTurret extends AbstractMapObject {
     protected Integer cost;
     protected Integer width;
     protected Integer height;
+    protected Integer level = 1;
+    protected boolean isOnMap = false;
     public abstract String getTurretName();
     public abstract VBox getDescriptionVBox();
+    public abstract void upgrade();
+
+    public boolean isOnMap(){
+        return isOnMap;
+    }
 
     public Double getRange() {
         return range;

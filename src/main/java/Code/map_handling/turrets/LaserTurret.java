@@ -31,7 +31,16 @@ public class LaserTurret extends AbstractTurret {
     @Override
     public VBox getDescriptionVBox() {
         return new VBox(new Label("range: " + range), new Label("dmg: " + dmg),
-                new Label("attack speed: " + rpm + " rpm"), new Label("cost: " + cost));
+                new Label("attack speed: " + rpm + " rpm"), new Label("cost: " + cost),
+                new Label("level: " + level));
     }
 
+    @Override
+    public void upgrade() {
+        range += 0.5;
+        dmg += 2.0;
+        rpm += 6.0;
+        level += 1;
+
+    }
 }

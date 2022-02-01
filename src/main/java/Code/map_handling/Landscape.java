@@ -1,7 +1,7 @@
 package Code.map_handling;
 
 public class Landscape extends AbstractMapObject {
-    public LandscapeType landscapeType;
+    public LandscapeType landscapeType; //TODO private
     public Landscape(LandscapeType landscapeType){
         this.landscapeType = landscapeType;
     }

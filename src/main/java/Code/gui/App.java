@@ -1,21 +1,25 @@
 package Code.gui;
 
 import Code.PlayerValues;
+import Code.game_engine.MainLoop;
 import Code.map_handling.Map;
 import Code.map_handling.TurretBuilder;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import java.util.Stack;
 
 import static java.lang.System.out;
 
 public class App extends Application {
 
     private GridPane gridPaneOfEverything;
+    private Pane paneOfEverything;
     private Stage primaryStage;
     private final static int windowWidth = 1400;
     private final static int windowHeight = 800;
@@ -24,21 +28,25 @@ public class App extends Application {
     private MapVisualizer mapVisualizer;
     private PlayerValues playerValues;
     private ValuesVisualizer valuesVisualizer;
-    private TurretObserver turretObserver;
+    private TurretTracker turretObserver;
+    private TurretBuilder turretBuilder;
 
     @Override
     public void init() {
         out.println("init");
         gridPaneOfEverything = new GridPane();
+        paneOfEverything = new Pane();
+        paneOfEverything.getChildren().add(gridPaneOfEverything);
         Map map = new Map(0);
         playerValues = new PlayerValues();
 
-        TurretObserver turretObserver = new TurretObserver();
+        TurretBuilder turretBuilder = new TurretBuilder(map, playerValues);
+        TurretTracker turretObserver = new TurretTracker(turretBuilder);
         TurretShop turretShop = new TurretShop((1400 - 1200) / 2, turretObserver);
-        TurretBuilder turretBuilder = new TurretBuilder(map, turretShop, playerValues);
+
         gridPaneOfEverything.add(turretShop.getVbox(), 1, 0);
 
-        mapVisualizer = new MapVisualizer(map, turretShop, mapWidth / map.getWidth(), mapHeight / map.getHeight(), turretBuilder);
+        mapVisualizer = new MapVisualizer(map,paneOfEverything, turretShop, turretObserver, turretBuilder, mapWidth / map.getWidth(), mapHeight / map.getHeight());
         gridPaneOfEverything.add(mapVisualizer.getMapGridPane(), 0, 0);
         valuesVisualizer = new ValuesVisualizer(playerValues);
         playerValues.addObserver(valuesVisualizer);
@@ -48,13 +56,16 @@ public class App extends Application {
         gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 2, 0);
         map.addObserver(mapVisualizer);
 
+        MainLoop mainLoop = new MainLoop(playerValues, mapVisualizer);
+        Thread mainLoopThread = new Thread(mainLoop);
+        mainLoopThread.start();
 
     }
 
 
     @Override
     public void start(Stage primaryStage) {
-        Scene scene = new Scene(gridPaneOfEverything, windowWidth, windowHeight);
+        Scene scene = new Scene(paneOfEverything, windowWidth, windowHeight);
         primaryStage.setScene(scene);
         this.primaryStage = primaryStage;
         Platform.runLater(primaryStage::show);
