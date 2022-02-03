@@ -8,12 +8,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 import java.util.TreeMap;
 
 
-public class MapVisualizer implements ITurretChangeObserver {
+public class MapVisualizer implements ITurretChangeObserver, Runnable {
     private final GridPane mapGridPane;
     private final Pane paneOfEverything;
     private final Map map;
@@ -27,7 +26,7 @@ public class MapVisualizer implements ITurretChangeObserver {
     private final TreeMap enemyBoxes;
 
     public MapVisualizer(Map map, Pane paneOfEverything, TurretShop turretShop, TurretTracker turretObserver, TurretBuilder turretBuilder, Integer guiElementBoxWidth, Integer guiElementBoxHeight) {
-        enemyBoxes = new TreeMap<Integer,VBox>();
+        enemyBoxes = new TreeMap<Integer, ImageView>();
         this.paneOfEverything = paneOfEverything;
         landscapeNameOnCursorLabel = new Label("");
         MapTileBox.setWidth(guiElementBoxWidth);
@@ -91,17 +90,26 @@ public class MapVisualizer implements ITurretChangeObserver {
         return mapGridPane;
     }
 
-    public void addEnemy(Enemy enemy){
-        enemyBoxes.remove(enemy.getID());
-        ImageView enemyImageView = new ImageView(ImageLoader.loadImage(enemy.getEnemyType().getResourcePath()));
-        enemyImageView.setFitHeight(20);
-        enemyImageView.setFitWidth(20);
-        enemyImageView.setX(0);
-        enemyImageView.setY(100);
-        paneOfEverything.getChildren().add(enemyImageView);
+    public void addEnemy(Enemy enemy, int x) {
 
     }
 
+    @Override
+    public void run() {
+        Enemy enemy = new Enemy(EnemyType.RUNNER);
+        for (Object key:enemyBoxes.keySet()) {
+            paneOfEverything.getChildren().remove(enemyBoxes.get(key));
+        }
+        enemyBoxes.clear();
+        ImageView enemyImageView = new ImageView(ImageLoader.loadImage(enemy.getEnemyType().getResourcePath()));
+        enemyImageView.setFitHeight(20);
+        enemyImageView.setFitWidth(20);
+        Random rn = new Random();
+        enemyImageView.setX(10+ rn.nextInt(20));
+        enemyImageView.setY(170);
+        paneOfEverything.getChildren().add(enemyImageView);
+        enemyBoxes.put(enemy.getID(),enemyImageView);
+    }
 
     @Override
     public void turretChanged(int x, int y) {
