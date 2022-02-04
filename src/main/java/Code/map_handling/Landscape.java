@@ -11,4 +11,7 @@ public class Landscape extends AbstractMapObject {
         return landscapeType.getResourcePath();
     }
 
+    public LandscapeType getLandscapeType() {
+        return landscapeType;
+    }
 }

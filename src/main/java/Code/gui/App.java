@@ -46,7 +46,10 @@ public class App extends Application {
 
         gridPaneOfEverything.add(turretShop.getVbox(), 1, 0);
 
-        mapVisualizer = new MapVisualizer(map,paneOfEverything, turretShop, turretObserver, turretBuilder, mapWidth / map.getWidth(), mapHeight / map.getHeight());
+        mapVisualizer = new MapVisualizer(map,paneOfEverything, turretShop, turretObserver, turretBuilder,
+                mapWidth / map.getWidth(), mapHeight / map.getHeight(),
+                (double)1200/map.getWidth());
+
         gridPaneOfEverything.add(mapVisualizer.getMapGridPane(), 0, 0);
         valuesVisualizer = new ValuesVisualizer(playerValues);
         playerValues.addObserver(valuesVisualizer);
@@ -56,7 +59,8 @@ public class App extends Application {
         gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 2, 0);
         map.addObserver(mapVisualizer);
 
-        MainLoop mainLoop = new MainLoop(playerValues, mapVisualizer);
+        MainLoop mainLoop = new MainLoop(playerValues, mapVisualizer, map);
+        mainLoop.addEnemyChangeObserver(mapVisualizer);
         Thread mainLoopThread = new Thread(mainLoop);
         mainLoopThread.start();
 

@@ -3,7 +3,7 @@ package Code;
 import java.util.Objects;
 
 public class Vector2d {
-    final public Double x;
+    public Double x;
     final public Double y;
 
     public Vector2d(Double x, Double y) {
@@ -37,6 +37,10 @@ public class Vector2d {
 
     public Integer IntY() {
         return this.y.intValue();
+    }
+
+    public boolean equals(Vector2d other){
+        return (Objects.equals(other.x, this.x) && Objects.equals(other.y, this.y));
     }
 
     @Override

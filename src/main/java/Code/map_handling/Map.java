@@ -1,5 +1,6 @@
 package Code.map_handling;
 
+import Code.Vector2d;
 import Code.gui.ITurretChangeObserver;
 
 import java.io.BufferedReader;
@@ -16,15 +17,66 @@ public class Map {
     private Integer width;
     private Integer height;
     private Landscape[][] landscapesArray;
+    private final Vector2d startPoint;
+    private final Vector2d endPoint;
     private final AbstractTurret[][] turretsArray;
     private final List<ITurretChangeObserver> observersList;
     private final List<Enemy> enemies;
+    private final List<Vector2d> pathNoSwimming;
+    private final List<Vector2d> pathSwimming;
 
     public Map(int file_number) {
         getLandscapeFromFile(file_number);
+        startPoint = new Vector2d(0.0, 4.0);
+        endPoint = new Vector2d(0.0, 11.0);
         turretsArray = new AbstractTurret[width][height];
         observersList = new ArrayList<>();
         enemies = new ArrayList<>();
+        pathNoSwimming = new ArrayList<>();
+        pathSwimming = new ArrayList<>();
+        findPaths(pathNoSwimming, false);
+        findPaths(pathSwimming, true);
+    }
+
+    private void findPaths(List<Vector2d> path, boolean swimming) {
+        MoveDirection[][] visited = new MoveDirection[width][height];
+        DFS(startPoint.IntX(), startPoint.IntY(), swimming, visited);
+        Vector2d pos = new Vector2d(endPoint.x, endPoint.y);
+        path.add(pos);
+        while (!pos.equals(startPoint)) {
+            int newX = pos.IntX() - visited[pos.IntX()][pos.IntY()].getVector2d().IntX();
+            int newY = pos.IntY() - visited[pos.IntX()][pos.IntY()].getVector2d().IntY();
+            pos = new Vector2d((double) newX, (double) newY);
+            path.add(pos);
+        }
+    }
+
+    private void DFS(int x, int y, boolean swimming, MoveDirection[][] visited) {
+        if (visited[endPoint.IntX()][endPoint.IntY()] != null) {
+            return;
+        }
+        for (MoveDirection moveDirection : MoveDirection.values()) {
+            int newX = x + moveDirection.getVector2d().IntX();
+            int newY = y + moveDirection.getVector2d().IntY();
+            if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                if (swimming && landscapesArray[newX][newY].getLandscapeType() == LandscapeType.RIVER
+                        && visited[newX][newY] == null) {
+                    visited[newX][newY] = moveDirection;
+                    DFS(newX, newY, swimming, visited);
+                }
+            }
+        }
+
+        for (MoveDirection moveDirection : MoveDirection.values()) {
+            int newX = x + moveDirection.getVector2d().IntX();
+            int newY = y + moveDirection.getVector2d().IntY();
+            if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                if (landscapesArray[newX][newY].getLandscapeType() == LandscapeType.PATH && visited[newX][newY] == null) {
+                    visited[newX][newY] = moveDirection;
+                    DFS(newX, newY, swimming, visited);
+                }
+            }
+        }
     }
 
     private void getLandscapeFromFile(int file_number) {
@@ -67,7 +119,7 @@ public class Map {
         }
     }
 
-    public void addEnemy(Enemy enemy){
+    public void addEnemy(Enemy enemy) {
         enemies.add(enemy);
     }
 
@@ -87,6 +139,9 @@ public class Map {
         return turretsArray[x][y];
     }
 
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
 
     public Integer getWidth() {
         return width;
