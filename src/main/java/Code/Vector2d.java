@@ -31,6 +31,10 @@ public class Vector2d {
         return new Vector2d(this.x - other.x, this.y - other.y);
     }
 
+    public Vector2d multiply(double scalar) {
+        return new Vector2d(this.x * scalar, this.y * scalar);
+    }
+
     public Integer IntX() {
         return this.x.intValue();
     }
@@ -39,7 +43,7 @@ public class Vector2d {
         return this.y.intValue();
     }
 
-    public boolean equals(Vector2d other){
+    public boolean equals(Vector2d other) {
         return (Objects.equals(other.x, this.x) && Objects.equals(other.y, this.y));
     }
 

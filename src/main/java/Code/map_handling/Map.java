@@ -9,6 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.System.out;
@@ -22,8 +24,8 @@ public class Map {
     private final AbstractTurret[][] turretsArray;
     private final List<ITurretChangeObserver> observersList;
     private final List<Enemy> enemies;
-    private final List<Vector2d> pathNoSwimming;
-    private final List<Vector2d> pathSwimming;
+    private final List<MoveDirection> pathNoSwimming;
+    private final List<MoveDirection> pathSwimming;
 
     public Map(int file_number) {
         getLandscapeFromFile(file_number);
@@ -35,20 +37,24 @@ public class Map {
         pathNoSwimming = new ArrayList<>();
         pathSwimming = new ArrayList<>();
         findPaths(pathNoSwimming, false);
+        out.println(pathNoSwimming);
         findPaths(pathSwimming, true);
+        out.println(pathSwimming);
     }
 
-    private void findPaths(List<Vector2d> path, boolean swimming) {
+    private void findPaths(List<MoveDirection> path, boolean swimming) {
         MoveDirection[][] visited = new MoveDirection[width][height];
+        visited[startPoint.IntX()][startPoint.IntY()]=MoveDirection.RIGHT;
         DFS(startPoint.IntX(), startPoint.IntY(), swimming, visited);
         Vector2d pos = new Vector2d(endPoint.x, endPoint.y);
-        path.add(pos);
+        path.add(visited[pos.IntX()][pos.IntY()]);
         while (!pos.equals(startPoint)) {
             int newX = pos.IntX() - visited[pos.IntX()][pos.IntY()].getVector2d().IntX();
             int newY = pos.IntY() - visited[pos.IntX()][pos.IntY()].getVector2d().IntY();
             pos = new Vector2d((double) newX, (double) newY);
-            path.add(pos);
+            path.add(visited[pos.IntX()][pos.IntY()]);
         }
+        Collections.reverse(path);
     }
 
     private void DFS(int x, int y, boolean swimming, MoveDirection[][] visited) {
@@ -143,6 +149,14 @@ public class Map {
         return enemies;
     }
 
+    public List<MoveDirection> getPathNoSwimming() {
+        return pathNoSwimming;
+    }
+
+    public List<MoveDirection> getPathSwimming() {
+        return pathSwimming;
+    }
+
     public Integer getWidth() {
         return width;
     }
@@ -150,4 +164,6 @@ public class Map {
     public Integer getHeight() {
         return height;
     }
+
+
 }

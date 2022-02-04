@@ -10,8 +10,9 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.TreeMap;
+
+import static java.lang.System.out;
 
 
 public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserver, Runnable {
@@ -25,12 +26,12 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private final TurretTracker turretObserver;
     private final TurretBuilder turretBuilder;
     private VBox tmpTurret;
-    private final TreeMap enemyBoxes;
+    private final TreeMap enemyImages;
     private final Double tileSize;
     private final List<Enemy> enemiesToRender;
 
     public MapVisualizer(Map map, Pane paneOfEverything, TurretShop turretShop, TurretTracker turretObserver, TurretBuilder turretBuilder, Integer guiElementBoxWidth, Integer guiElementBoxHeight, Double tileSize) {
-        enemyBoxes = new TreeMap<Integer, ImageView>();
+        enemyImages = new TreeMap<Integer, ImageView>();
         this.tileSize = tileSize;
         this.paneOfEverything = paneOfEverything;
         landscapeNameOnCursorLabel = new Label("");
@@ -103,15 +104,15 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
 
     public synchronized void updateEnemies() {
         for (Enemy enemy : enemiesToRender) {
-            paneOfEverything.getChildren().remove(enemyBoxes.get(enemy.getID()));
-            ImageView enemyImageView = new ImageView(ImageLoader.loadImage(enemy.getEnemyType().getResourcePath()));
+            if (enemyImages.get(enemy.getID()) == null) {
+                enemyImages.put(enemy.getID(), new ImageView(ImageLoader.loadImage(enemy.getEnemyType().getResourcePath())));
+                paneOfEverything.getChildren().add((ImageView) enemyImages.get(enemy.getID()));
+            }
+            ImageView enemyImageView = (ImageView) enemyImages.get(enemy.getID());
             enemyImageView.setFitHeight(20);
             enemyImageView.setFitWidth(20);
-            Random rn = new Random();
-            enemyImageView.setX(enemy.getPosition().x*tileSize-10);
-            enemyImageView.setY(enemy.getPosition().y*tileSize-10);
-            paneOfEverything.getChildren().add(enemyImageView);
-            enemyBoxes.put(enemy.getID(), enemyImageView);
+            enemyImageView.setX(enemy.getPosition().x * tileSize - 10);
+            enemyImageView.setY(enemy.getPosition().y * tileSize - 10);
         }
     }
 

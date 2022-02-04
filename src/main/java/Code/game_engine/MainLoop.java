@@ -51,7 +51,8 @@ public class MainLoop implements Runnable {
 
     @Override
     public void run() {
-        map.addEnemy(new Enemy(EnemyType.RUNNER, System.currentTimeMillis()));
+        map.addEnemy(new Enemy(EnemyType.RUNNER, System.currentTimeMillis(), map));
+        map.addEnemy(new Enemy(EnemyType.RUNNER, System.currentTimeMillis(), map));
         while (!playerValues.isPlayerDead()) {
             moveEnemies();
             Platform.runLater(mapVisualizer);

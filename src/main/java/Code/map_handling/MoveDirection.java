@@ -16,4 +16,19 @@ public enum MoveDirection {
             case UP -> new Vector2d(0.0, -1.0);
         };
     }
+    public static MoveDirection getFromV2d(Vector2d vector2d){
+        if (vector2d.equals( new Vector2d( 1.0,0.0))){
+            return RIGHT;
+        }
+        if (vector2d.equals( new Vector2d( 0.0,1.0))){
+            return DOWN;
+        }
+        if (vector2d.equals( new Vector2d( -1.0,0.0))){
+            return LEFT;
+        }
+        if (vector2d.equals( new Vector2d( 0.0,-1.0))){
+            return UP;
+        }
+        return null;
+    }
 }
