@@ -6,6 +6,8 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
+import static java.lang.System.out;
+
 public abstract class AbstractTurret extends AbstractMapObject implements IEnemyChangeObserver {
     protected Double range;
     protected Integer cost;
@@ -23,14 +25,14 @@ public abstract class AbstractTurret extends AbstractMapObject implements IEnemy
         return ((pos.x - position.x) * (pos.x - position.x) + (pos.y - position.y) * (pos.y - position.y)) <= range * range;
     }
 
-    public abstract Vector2d fire();
+    public abstract Vector2d fire(long currentTime);
 
     @Override
     public void enemyChanged(Enemy enemy) {
         if (isInRange(enemy.getPosition()) && !targets.contains(enemy)){
             targets.add(enemy);
         }
-        if (!isInRange(enemy.getPosition())){
+        if (!isInRange(enemy.getPosition()) || enemy.isDead()){
             targets.remove(enemy);
         }
     }

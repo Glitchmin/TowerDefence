@@ -8,11 +8,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+
+import static java.lang.System.out;
 
 
 public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserver, Runnable {
@@ -30,9 +33,11 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private final Double tileSize;
     private final List<Enemy> enemiesToRender;
     private final List<Line> linesList;
+    private final List<Long> linesExpTimeList;
+    private long time;
 
     public MapVisualizer(Map map, Pane paneOfEverything, TurretShop turretShop, TurretTracker turretObserver, TurretBuilder turretBuilder, Integer guiElementBoxWidth, Integer guiElementBoxHeight, Double tileSize) {
-        enemyImages = new TreeMap<Integer, ImageView>();
+        enemyImages = new TreeMap<>();
         this.tileSize = tileSize;
         this.paneOfEverything = paneOfEverything;
         landscapeNameOnCursorLabel = new Label("");
@@ -44,6 +49,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         this.turretBuilder = turretBuilder;
         this.enemiesToRender = new ArrayList<>();
         this.linesList = new ArrayList<>();
+        this.linesExpTimeList = new ArrayList<>();
         mapGridPane = new GridPane();
 
         landscapeBoxes = new MapTileBox[map.getWidth()][map.getHeight()];
@@ -62,7 +68,11 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         }
     }
 
-    public void addALine(Vector2d start, Vector2d end) {
+    public void updateTime(long time){
+        this.time = time;
+    }
+
+    public void addLine(Vector2d start, Vector2d end) {
         synchronized (this) {
             Line line = new Line();
             line.setStartX(start.x * tileSize);
@@ -70,14 +80,22 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
             line.setEndX(end.x * tileSize);
             line.setEndY(end.y * tileSize);
             linesList.add(line);
+            linesExpTimeList.add(time+100);
         }
     }
 
     private void drawLines() {
         synchronized (this) {
-            for (Line line : linesList) {
+            for (int i=0; i<linesList.size();i++) {
+                Line line = linesList.get(i);
                 if (!paneOfEverything.getChildren().contains(line)) {
                     paneOfEverything.getChildren().add(line);
+                }
+                if (time > linesExpTimeList.get(i)){
+                    paneOfEverything.getChildren().remove(linesList.get(i));
+                    linesList.remove(linesList.get(i));
+                    linesExpTimeList.remove(linesExpTimeList.get(i));
+                    i--;
                 }
             }
         }
@@ -139,7 +157,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
                 }
                 enemyImageView.setX(enemy.getPosition().x * tileSize - 10);
                 enemyImageView.setY(enemy.getPosition().y * tileSize - 10);
-                if (enemy.reachedEnd()) {
+                if (enemy.reachedEnd() || enemy.isDead()) {
                     paneOfEverything.getChildren().remove(enemyImageView);
                     enemyImages.remove(enemy.getID());
                 }

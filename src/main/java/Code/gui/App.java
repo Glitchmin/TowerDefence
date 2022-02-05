@@ -60,7 +60,6 @@ public class App extends Application {
         map.addObserver(mapVisualizer);
 
         MainLoop mainLoop = new MainLoop(playerValues, mapVisualizer, map);
-        mainLoop.addEnemyChangeObserver(mapVisualizer);
         Thread mainLoopThread = new Thread(mainLoop);
         mainLoopThread.start();
 

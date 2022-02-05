@@ -13,6 +13,7 @@ import java.util.List;
 public class LaserTurret extends AbstractTurret {
     private Double dmg;
     private Double rpm;
+    private long lastTimeFired;
 
     public LaserTurret(Vector2d position) {
         range = 2.0;
@@ -51,10 +52,13 @@ public class LaserTurret extends AbstractTurret {
     }
 
     @Override
-    public Vector2d fire() {
-        if (!targets.isEmpty()){
-            targets.get(0).freeze(1000);
-            return targets.get(0).getPosition();
+    public Vector2d fire(long currentTime) {
+        if (currentTime-lastTimeFired >= 1000*rpm/60) {
+            if (!targets.isEmpty()) {
+                targets.get(0).decreaseHp(dmg);
+                lastTimeFired = currentTime;
+                return targets.get(0).getPosition();
+            }
         }
         return null;
     }

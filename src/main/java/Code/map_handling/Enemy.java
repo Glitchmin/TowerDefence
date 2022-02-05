@@ -35,7 +35,7 @@ public class Enemy extends AbstractMapObject {
         switch (enemyType) {
             default:
                 speed = 2.0;
-                hp = 10.0;
+                hp = 12.0;
                 goldDrop = 5;
                 dmg = 1;
                 canSwim = false;
@@ -89,7 +89,7 @@ public class Enemy extends AbstractMapObject {
 
     }
 
-    private void positionChanged() {
+    public void positionChanged() {
         for (IEnemyChangeObserver observer: observersList){
             observer.enemyChanged(this);
         }
@@ -106,12 +106,20 @@ public class Enemy extends AbstractMapObject {
         return pathCounter == path.size()-1;
     }
 
+    public boolean isDead(){
+        return hp<0;
+    }
+
     public void freeze(long ms){
         sumFreezeTime+=ms;
     }
 
     public Integer getDmg() {
         return dmg;
+    }
+
+    public void decreaseHp(Double dmg){
+        hp -= dmg;
     }
 
     @Override
