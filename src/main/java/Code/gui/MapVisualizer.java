@@ -1,5 +1,6 @@
 package Code.gui;
 
+import Code.Vector2d;
 import Code.map_handling.*;
 import Code.map_handling.turrets.LaserTurret;
 import javafx.scene.control.Label;
@@ -7,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private final TreeMap<Integer, ImageView> enemyImages;
     private final Double tileSize;
     private final List<Enemy> enemiesToRender;
+    private final List<Line> linesList;
 
     public MapVisualizer(Map map, Pane paneOfEverything, TurretShop turretShop, TurretTracker turretObserver, TurretBuilder turretBuilder, Integer guiElementBoxWidth, Integer guiElementBoxHeight, Double tileSize) {
         enemyImages = new TreeMap<Integer, ImageView>();
@@ -40,6 +43,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         this.turretObserver = turretObserver;
         this.turretBuilder = turretBuilder;
         this.enemiesToRender = new ArrayList<>();
+        this.linesList = new ArrayList<>();
         mapGridPane = new GridPane();
 
         landscapeBoxes = new MapTileBox[map.getWidth()][map.getHeight()];
@@ -56,7 +60,27 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
                 });
             }
         }
+    }
 
+    public void addALine(Vector2d start, Vector2d end) {
+        synchronized (this) {
+            Line line = new Line();
+            line.setStartX(start.x * tileSize);
+            line.setStartY(start.y * tileSize);
+            line.setEndX(end.x * tileSize);
+            line.setEndY(end.y * tileSize);
+            linesList.add(line);
+        }
+    }
+
+    private void drawLines() {
+        synchronized (this) {
+            for (Line line : linesList) {
+                if (!paneOfEverything.getChildren().contains(line)) {
+                    paneOfEverything.getChildren().add(line);
+                }
+            }
+        }
     }
 
     private void handleCursorOnMapTile(MapTileBox mapTileBox) {
@@ -75,12 +99,12 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private void showTmpTurret(int i, int j) {
         mapGridPane.getChildren().remove(tmpTurret);
         if (turretShop.getSelectedTurret() == TurretType.LASER) {
-            tmpTurret = new MapTileBox(new LaserTurret()).getVBox();
+            tmpTurret = new MapTileBox(new LaserTurret(new Vector2d(i + 0.5, j + 0.5))).getVBox();
             tmpTurret.setOpacity(0.5);
             tmpTurret.setOnMouseClicked(Action -> {
                 if (map.getLandscape(i, j).landscapeType == LandscapeType.GRASS
                         || map.getLandscape(i, j).landscapeType == LandscapeType.HILL) {
-                    turretBuilder.build(i, j, new LaserTurret());
+                    turretBuilder.build(i, j, new LaserTurret(new Vector2d(i + 0.5, j + 0.5)));
                 }
             });
             mapGridPane.add(tmpTurret, i, j);
@@ -126,6 +150,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     @Override
     public void run() {
         updateEnemies();
+        drawLines();
     }
 
     @Override

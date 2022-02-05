@@ -4,6 +4,7 @@ import Code.PlayerValues;
 import Code.Vector2d;
 import Code.gui.IEnemyChangeObserver;
 import Code.gui.MapVisualizer;
+import Code.map_handling.AbstractTurret;
 import Code.map_handling.Enemy;
 import Code.map_handling.EnemyType;
 import Code.map_handling.Map;
@@ -58,13 +59,23 @@ public class MainLoop implements Runnable {
         }
     }
 
+    public void calcTurrets(){
+        for (AbstractTurret turret : map.getTurretsList()){
+            Vector2d firePos = turret.fire();
+            if (firePos != null) {
+                mapVisualizer.addALine(turret.getPosition(), firePos);
+            }
+        }
+    }
+
 
     @Override
     public void run() {
-        map.addEnemy(new Enemy(EnemyType.RUNNER, System.currentTimeMillis(), map));
-        map.addEnemy(new Enemy(EnemyType.RUNNER, System.currentTimeMillis(), map));
+        map.addEnemy(new Enemy(EnemyType.RUNNER, System.currentTimeMillis(), map, map.getTurretsList()));
+        map.addEnemy(new Enemy(EnemyType.RUNNER, System.currentTimeMillis(), map, map.getTurretsList()));
         while (!playerValues.isPlayerDead()) {
             moveEnemies();
+            calcTurrets();
             Platform.runLater(mapVisualizer);
             try {
                 Thread.sleep(3);

@@ -1,6 +1,7 @@
 package Code.map_handling;
 
 import Code.Vector2d;
+import Code.gui.IEnemyChangeObserver;
 import Code.gui.ITurretChangeObserver;
 
 import java.io.BufferedReader;
@@ -22,6 +23,7 @@ public class Map {
     private final Vector2d startPoint;
     private final Vector2d endPoint;
     private final AbstractTurret[][] turretsArray;
+    private final List <AbstractTurret> turretsList;
     private final List<ITurretChangeObserver> observersList;
     private final List<Enemy> enemies;
     private final List<PathTile> pathNoSwimming;
@@ -32,6 +34,7 @@ public class Map {
         startPoint = new Vector2d(0.0, 4.0);
         endPoint = new Vector2d(0.0, 11.0);
         turretsArray = new AbstractTurret[width][height];
+        turretsList = new ArrayList<>();
         observersList = new ArrayList<>();
         enemies = new ArrayList<>();
         pathNoSwimming = new ArrayList<>();
@@ -141,6 +144,11 @@ public class Map {
         out.println(turretsArray[x][y]);
         if (turretsArray[x][y] == null) {
             turretsArray[x][y] = turret;
+            turretsList.add(turret);
+            for (Enemy enemy: getEnemies()){
+                out.println("added observer");
+                enemy.addObserver(turret);
+            }
             turretChanged(x, y);
         }
     }
@@ -175,5 +183,7 @@ public class Map {
         return height;
     }
 
-
+    public List<AbstractTurret> getTurretsList() {
+        return turretsList;
+    }
 }

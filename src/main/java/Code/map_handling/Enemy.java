@@ -1,13 +1,12 @@
 package Code.map_handling;
 
 import Code.Vector2d;
+import Code.gui.IEnemyChangeObserver;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
 import static java.lang.Math.abs;
-import static java.lang.System.out;
 
 public class Enemy extends AbstractMapObject {
     private final Double speed;
@@ -23,11 +22,13 @@ public class Enemy extends AbstractMapObject {
     private long maxPathTime;
     private long sumFreezeTime;
     private final List<PathTile> path;
+    private final List<IEnemyChangeObserver> observersList;
 
-    public Enemy(EnemyType enemyType, long startTime, Map map) {
+    public Enemy(EnemyType enemyType, long startTime, Map map, List<AbstractTurret> observersList) {
         pathTime = 0;
         maxPathTime = 0;
         sumFreezeTime = 0;
+        this.observersList = new ArrayList<>(observersList);
         this.enemyType = enemyType;
         this.startTime = startTime;
         boolean canSwim;
@@ -59,6 +60,10 @@ public class Enemy extends AbstractMapObject {
         return position;
     }
 
+    public void addObserver(IEnemyChangeObserver observer){
+        observersList.add(observer);
+    }
+
     public void setPositionFromPathTime(){
         maxPathTime = Math.max(maxPathTime, pathTime);
         int pathCounter = (int)((maxPathTime*speed)/1000);
@@ -79,8 +84,15 @@ public class Enemy extends AbstractMapObject {
                 case DOWN -> positionChange = new Vector2d(0.5,pathTileProgress);
             }
         }
+        positionChanged();
         position = position.add(positionChange);
 
+    }
+
+    private void positionChanged() {
+        for (IEnemyChangeObserver observer: observersList){
+            observer.enemyChanged(this);
+        }
     }
 
     public void move(long timeOfCalc) {

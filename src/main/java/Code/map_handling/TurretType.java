@@ -1,5 +1,6 @@
 package Code.map_handling;
 
+import Code.Vector2d;
 import Code.map_handling.turrets.LaserTurret;
 
 public enum TurretType {
@@ -7,10 +8,10 @@ public enum TurretType {
     MORTAR,
     ELECTRIC;
 
-    public AbstractTurret getNewTurret() {
+    public AbstractTurret getNewTurret(Vector2d position) {
         return switch (this) {
-            case LASER -> new LaserTurret();
-            default -> new LaserTurret();
+            case LASER -> new LaserTurret(position);
+            default -> new LaserTurret(position);
         };
     }
 }

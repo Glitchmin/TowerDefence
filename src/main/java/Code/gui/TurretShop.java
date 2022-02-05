@@ -1,5 +1,6 @@
 package Code.gui;
 
+import Code.Vector2d;
 import Code.map_handling.AbstractTurret;
 import Code.map_handling.TurretType;
 import Code.map_handling.turrets.LaserTurret;
@@ -29,7 +30,7 @@ public class TurretShop {
         nameLabel.setAlignment(Pos.BOTTOM_CENTER);
         nameLabel.setMinWidth(2 * columnWidth);
 
-        addTurret(new LaserTurret(), 0, 0);
+        addTurret(new LaserTurret(null), 0, 0);
 
         gridPane.setGridLinesVisible(true);
         ImageView cancelImage = new ImageView(ImageLoader.loadImage("src/main/resources/cancel.png"));
@@ -57,7 +58,7 @@ public class TurretShop {
             if (turret instanceof LaserTurret) {
                 selectedTurret = TurretType.LASER;
             }
-            turretObserver.updateVBox(selectedTurret.getNewTurret());
+            turretObserver.updateVBox(selectedTurret.getNewTurret(null));
         }
     }
 
