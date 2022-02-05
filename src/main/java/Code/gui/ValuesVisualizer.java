@@ -26,6 +26,6 @@ public class ValuesVisualizer implements IPlayerValuesChangeObserver {
     public void valuesChanged() {
         goldLabel.setText("gold: "+playerValues.getGold());
         manaLabel.setText("mana: "+playerValues.getMana());
-        healthLabel.setText("health: 0, git gud scrub");
+        healthLabel.setText("health: "+playerValues.getHealth());
     }
 }

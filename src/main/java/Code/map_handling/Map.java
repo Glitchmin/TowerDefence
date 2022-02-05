@@ -24,8 +24,8 @@ public class Map {
     private final AbstractTurret[][] turretsArray;
     private final List<ITurretChangeObserver> observersList;
     private final List<Enemy> enemies;
-    private final List<MoveDirection> pathNoSwimming;
-    private final List<MoveDirection> pathSwimming;
+    private final List<PathTile> pathNoSwimming;
+    private final List<PathTile> pathSwimming;
 
     public Map(int file_number) {
         getLandscapeFromFile(file_number);
@@ -42,17 +42,17 @@ public class Map {
         out.println(pathSwimming);
     }
 
-    private void findPaths(List<MoveDirection> path, boolean swimming) {
+    private void findPaths(List<PathTile> path, boolean swimming) {
         MoveDirection[][] visited = new MoveDirection[width][height];
-        visited[startPoint.IntX()][startPoint.IntY()]=MoveDirection.RIGHT;
+        visited[startPoint.IntX()][startPoint.IntY()] = MoveDirection.RIGHT;
         DFS(startPoint.IntX(), startPoint.IntY(), swimming, visited);
         Vector2d pos = new Vector2d(endPoint.x, endPoint.y);
-        path.add(visited[pos.IntX()][pos.IntY()]);
+        path.add(new PathTile(pos, visited[pos.IntX()][pos.IntY()]));
         while (!pos.equals(startPoint)) {
             int newX = pos.IntX() - visited[pos.IntX()][pos.IntY()].getVector2d().IntX();
             int newY = pos.IntY() - visited[pos.IntX()][pos.IntY()].getVector2d().IntY();
             pos = new Vector2d((double) newX, (double) newY);
-            path.add(visited[pos.IntX()][pos.IntY()]);
+            path.add(new PathTile(pos, visited[pos.IntX()][pos.IntY()]));
         }
         Collections.reverse(path);
     }
@@ -126,7 +126,15 @@ public class Map {
     }
 
     public void addEnemy(Enemy enemy) {
-        enemies.add(enemy);
+        synchronized (this) {
+            enemies.add(enemy);
+        }
+    }
+
+    public void removeEnemy(Enemy enemy) {
+        synchronized (this) {
+            enemies.remove(enemy);
+        }
     }
 
     public void buildTurret(int x, int y, AbstractTurret turret) {
@@ -146,14 +154,16 @@ public class Map {
     }
 
     public List<Enemy> getEnemies() {
-        return enemies;
+        synchronized (this) {
+            return enemies;
+        }
     }
 
-    public List<MoveDirection> getPathNoSwimming() {
+    public List<PathTile> getPathNoSwimming() {
         return pathNoSwimming;
     }
 
-    public List<MoveDirection> getPathSwimming() {
+    public List<PathTile> getPathSwimming() {
         return pathSwimming;
     }
 

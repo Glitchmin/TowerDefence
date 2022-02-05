@@ -1,11 +1,14 @@
 package Code;
 
 import Code.gui.IPlayerValuesChangeObserver;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerValues {
+import static java.lang.System.out;
+
+public class PlayerValues implements Runnable {
     private Integer gold;
     private Integer mana;
     private Integer health;
@@ -28,6 +31,11 @@ public class PlayerValues {
         }
     }
 
+    @Override
+    public void run() {
+        valuesChanged();
+    }
+
     public Integer getGold() {
         return gold;
     }
@@ -46,7 +54,13 @@ public class PlayerValues {
         return health;
     }
 
-    public boolean isPlayerDead(){
+    public void dealDmg(Integer dmg) {
+        health -= dmg;
+        Platform.runLater(this);
+    }
+
+
+    public boolean isPlayerDead() {
         return health <= 0;
     }
 

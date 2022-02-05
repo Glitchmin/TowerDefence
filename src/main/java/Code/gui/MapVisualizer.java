@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import static java.lang.System.out;
-
 
 public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserver, Runnable {
     private final GridPane mapGridPane;
@@ -22,11 +20,11 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private final MapTileBox[][] landscapeBoxes;
     private final MapTileBox[][] turretBoxes;
     private final TurretShop turretShop;
-    private Label landscapeNameOnCursorLabel;
+    private final Label landscapeNameOnCursorLabel;
     private final TurretTracker turretObserver;
     private final TurretBuilder turretBuilder;
     private VBox tmpTurret;
-    private final TreeMap enemyImages;
+    private final TreeMap<Integer, ImageView> enemyImages;
     private final Double tileSize;
     private final List<Enemy> enemiesToRender;
 
@@ -98,21 +96,30 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     }
 
     @Override
-    public synchronized void enemyChanged(Enemy enemy) {
-        enemiesToRender.add(enemy);
+    public void enemyChanged(Enemy enemy) {
+        synchronized (map) {
+            enemiesToRender.add(enemy);
+        }
     }
 
-    public synchronized void updateEnemies() {
-        for (Enemy enemy : enemiesToRender) {
-            if (enemyImages.get(enemy.getID()) == null) {
-                enemyImages.put(enemy.getID(), new ImageView(ImageLoader.loadImage(enemy.getEnemyType().getResourcePath())));
-                paneOfEverything.getChildren().add((ImageView) enemyImages.get(enemy.getID()));
+    public void updateEnemies() {
+        synchronized (map) {
+            for (Enemy enemy : enemiesToRender) {
+                ImageView enemyImageView = enemyImages.get(enemy.getID());
+                if (enemyImageView == null) {
+                    enemyImageView = new ImageView(ImageLoader.loadImage(enemy.getEnemyType().getResourcePath()));
+                    enemyImages.put(enemy.getID(), enemyImageView);
+                    paneOfEverything.getChildren().add(enemyImages.get(enemy.getID()));
+                    enemyImageView.setFitHeight(20);
+                    enemyImageView.setFitWidth(20);
+                }
+                enemyImageView.setX(enemy.getPosition().x * tileSize - 10);
+                enemyImageView.setY(enemy.getPosition().y * tileSize - 10);
+                if (enemy.reachedEnd()) {
+                    paneOfEverything.getChildren().remove(enemyImageView);
+                    enemyImages.remove(enemy.getID());
+                }
             }
-            ImageView enemyImageView = (ImageView) enemyImages.get(enemy.getID());
-            enemyImageView.setFitHeight(20);
-            enemyImageView.setFitWidth(20);
-            enemyImageView.setX(enemy.getPosition().x * tileSize - 10);
-            enemyImageView.setY(enemy.getPosition().y * tileSize - 10);
         }
     }
 

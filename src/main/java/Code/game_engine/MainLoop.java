@@ -11,6 +11,7 @@ import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 
 import static java.lang.System.out;
@@ -20,15 +21,15 @@ public class MainLoop implements Runnable {
     private final MapVisualizer mapVisualizer;
     private final Map map;
     private final List<IEnemyChangeObserver> enemyChangeObservers;
-    private final long startTime;
+    private final Random random;
 
 
     public MainLoop(PlayerValues playerValues, MapVisualizer mapVisualizer, Map map) {
         this.playerValues = playerValues;
         this.mapVisualizer = mapVisualizer;
         this.map = map;
+        this.random = new Random();
         this.enemyChangeObservers = new ArrayList<>();
-        this.startTime = System.currentTimeMillis();
     }
 
     public void addEnemyChangeObserver(IEnemyChangeObserver enemyChangeObserver) {
@@ -42,9 +43,18 @@ public class MainLoop implements Runnable {
     }
 
     public void moveEnemies() {
+        List<Enemy> enemiesToDelete = new ArrayList<>();
         for (Enemy enemy : map.getEnemies()) {
-            enemy.move(System.currentTimeMillis());
+            if (!enemy.reachedEnd()) {
+                enemy.move(System.currentTimeMillis());
+            } else {
+                playerValues.dealDmg(enemy.getDmg());
+                enemiesToDelete.add(enemy);
+            }
             enemyChanged(enemy);
+        }
+        for (Enemy enemy : enemiesToDelete) {
+            map.removeEnemy(enemy);
         }
     }
 
@@ -57,7 +67,7 @@ public class MainLoop implements Runnable {
             moveEnemies();
             Platform.runLater(mapVisualizer);
             try {
-                Thread.sleep(20);
+                Thread.sleep(3);
             } catch (InterruptedException e) {
                 out.println("Interrupted Threat Simulation Engine");
                 e.printStackTrace();

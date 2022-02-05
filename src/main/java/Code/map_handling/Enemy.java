@@ -11,29 +11,32 @@ import static java.lang.System.out;
 
 public class Enemy extends AbstractMapObject {
     private final Double speed;
+    private final Integer dmg;
     private Double hp;
     private final Integer goldDrop;
     private Vector2d position;
     private final EnemyType enemyType;
     private static Integer counter = 0;
     private final Integer ID;
-    private long lastTimeCalc;
-    private Long pathChangeMoment;
-    private Integer pathCounter;
-    private final List<MoveDirection> path;
+    private final long startTime;
+    private long pathTime;
+    private long maxPathTime;
+    private long sumFreezeTime;
+    private final List<PathTile> path;
 
-    public Enemy(EnemyType enemyType, long lastTimeCalc, Map map) {
-        pathCounter = 1;
-        pathChangeMoment = null;
-        position = new Vector2d(0.0, 4.33 + (double) new Random().nextInt(33) / 100);
+    public Enemy(EnemyType enemyType, long startTime, Map map) {
+        pathTime = 0;
+        maxPathTime = 0;
+        sumFreezeTime = 0;
         this.enemyType = enemyType;
-        this.lastTimeCalc = lastTimeCalc;
+        this.startTime = startTime;
         boolean canSwim;
         switch (enemyType) {
             default:
                 speed = 2.0;
                 hp = 10.0;
                 goldDrop = 5;
+                dmg = 1;
                 canSwim = false;
         }
         if (canSwim) {
@@ -56,22 +59,52 @@ public class Enemy extends AbstractMapObject {
         return position;
     }
 
+    public void setPositionFromPathTime(){
+        maxPathTime = Math.max(maxPathTime, pathTime);
+        int pathCounter = (int)((maxPathTime*speed)/1000);
+        position = path.get(pathCounter).getPos();
+        double pathTileProgress = (maxPathTime*speed - ((pathCounter*1000)))/1000;
+        Vector2d positionChange = new Vector2d(0.0,0.0);
+        switch (path.get(pathCounter).getDir()){
+            case LEFT -> positionChange = positionChange.add(new Vector2d(1.0-pathTileProgress,0.5));
+            case RIGHT -> positionChange = positionChange.add(new Vector2d(pathTileProgress,0.5));
+            case UP -> positionChange = positionChange.add(new Vector2d(0.5,1.0-pathTileProgress));
+            case DOWN -> positionChange = positionChange.add(new Vector2d(0.5,pathTileProgress));
+        }
+        if (pathTileProgress > 0.5 && path.get(pathCounter+1).getDir()!=path.get(pathCounter).getDir()){
+            switch (path.get(pathCounter+1).getDir()){
+                case LEFT -> positionChange = new Vector2d(1.0-pathTileProgress,0.5);
+                case RIGHT -> positionChange =new Vector2d(pathTileProgress,0.5);
+                case UP -> positionChange = new Vector2d(0.5,1.0-pathTileProgress);
+                case DOWN -> positionChange = new Vector2d(0.5,pathTileProgress);
+            }
+        }
+        position = position.add(positionChange);
+
+    }
+
     public void move(long timeOfCalc) {
-        Vector2d newPosition = position.add(path.get(pathCounter).getVector2d().multiply(
-                speed * ((double) (timeOfCalc - lastTimeCalc) / 1000)));
-        if (!Objects.equals(newPosition.IntX(), position.IntX()) || !Objects.equals(newPosition.IntY(), position.IntY())) {
-            pathChangeMoment = timeOfCalc + abs(new Random().nextLong() % 250) + 50;
-        }
-        if (pathChangeMoment != null && timeOfCalc > pathChangeMoment) {
-            pathCounter++;
-            pathChangeMoment = null;
-        }
-        position = newPosition;
-        lastTimeCalc = timeOfCalc;
+        pathTime = (timeOfCalc - startTime) - sumFreezeTime;
+        setPositionFromPathTime();
+    }
+
+    public boolean reachedEnd() {
+        maxPathTime = Math.max(maxPathTime, pathTime);
+        int pathCounter = (int)((maxPathTime*speed)/1000);
+        return pathCounter == path.size()-1;
+    }
+
+    public void freeze(long ms){
+        sumFreezeTime+=ms;
+    }
+
+    public Integer getDmg() {
+        return dmg;
     }
 
     @Override
     public String getResourcePath() {
         return enemyType.getResourcePath();
     }
+
 }
