@@ -33,8 +33,8 @@ public class App extends Application {
         playerValues = new PlayerValues();
 
         TurretBuilder turretBuilder = new TurretBuilder(map, playerValues);
-        TurretTracker turretTracker = new TurretTracker(turretBuilder);
-        Shop shop = new Shop((1400 - 1200) / 2, turretTracker);
+        ShopItemsTracker shopItemsTracker = new ShopItemsTracker(turretBuilder);
+        Shop shop = new Shop((1400 - 1200) / 2, shopItemsTracker);
 
         gridPaneOfEverything.add(shop.getVbox(), 1, 0);
 
@@ -49,7 +49,7 @@ public class App extends Application {
         gridPaneOfEverything.add(valuesVisualizer.getLabelsVBox(), 0, 1);
         valuesVisualizer.valuesChanged();
         gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 2, 0);
-        map.addTurretChangeObserver(mapVisualizer);
+        map.addObserver(mapVisualizer);
 
         MainLoop mainLoop = new MainLoop(playerValues, mapVisualizer, map);
         Thread mainLoopThread = new Thread(mainLoop);

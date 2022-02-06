@@ -18,9 +18,9 @@ public class Shop {
     private ImageView mark;
     private TurretType selectedTurret;
     private SpellType selectedSpell;
-    public final TurretTracker turretTracker;
+    public final ShopItemsTracker shopItemsTracker;
 
-    public Shop(Integer columnWidth, TurretTracker turretTracker) {
+    public Shop(Integer columnWidth, ShopItemsTracker shopItemsTracker) {
         this.imageSize = columnWidth;
         mark = new ImageView(ImageLoader.loadImage("src/main/resources/mark.png"));
         mark.setFitWidth(imageSize);
@@ -32,21 +32,21 @@ public class Shop {
         spellShopNameLabel.setMinWidth(2 * columnWidth);
         addSpell(new MeteorSpell(null), 0, 0);
 
-        this.turretTracker = turretTracker;
+        this.shopItemsTracker = shopItemsTracker;
         turretsGridPane = new GridPane();
         Label turretShopNameLabel = new Label("turret shop:");
         turretShopNameLabel.setAlignment(Pos.BOTTOM_CENTER);
         turretShopNameLabel.setMinWidth(2 * columnWidth);
         addTurret(new LaserTurret(null), 0, 0);
         addTurret(new ElectricTurret(null), 1, 0);
-        turretsGridPane.add(turretTracker.getVBox(), 0, 1, 1, 2);
+        turretsGridPane.add(shopItemsTracker.getVBox(), 0, 1, 1, 2);
         turretsGridPane.setGridLinesVisible(true);
 
         ImageView cancelImage = new ImageView(ImageLoader.loadImage("src/main/resources/cancel.png"));
         cancelImage.setFitWidth(imageSize * 2);
         cancelImage.setFitHeight(imageSize / 2);
         cancelImage.setOnMouseClicked(Action -> unMarkSelected());
-        shopVBox = new VBox(spellShopNameLabel, spellsGridPane, turretShopNameLabel, turretsGridPane, cancelImage, turretTracker.getVBox());
+        shopVBox = new VBox(spellShopNameLabel, spellsGridPane, turretShopNameLabel, turretsGridPane, cancelImage, shopItemsTracker.getVBox());
         shopVBox.setPrefWidth(columnWidth * 2);
     }
 
@@ -70,13 +70,13 @@ public class Shop {
             if (shopElement instanceof MeteorSpell) {
                 selectedSpell = SpellType.METEOR;
             }
-            turretTracker.updateVBox(null);
+            shopItemsTracker.updateVBox(selectedSpell.getNewSpell(null));
         }
 
         if (shopElement instanceof AbstractTurret) {
             turretsGridPane.add(mark, x, y);
             selectedTurret = TurretType.turretTypeFromClass((AbstractTurret) shopElement);
-            turretTracker.updateVBox(selectedTurret.getNewTurret(null));
+            shopItemsTracker.updateVBox(selectedTurret.getNewTurret(null));
         }
     }
 
@@ -89,7 +89,7 @@ public class Shop {
     }
 
     public void unMarkSelected() {
-        turretTracker.updateVBox(null);
+        shopItemsTracker.updateVBox(null);
         turretsGridPane.getChildren().remove(mark);
         selectedTurret = null;
         selectedSpell = null;

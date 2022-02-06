@@ -10,14 +10,13 @@ import static java.lang.System.out;
 
 public class PlayerValues implements Runnable {
     private Integer gold;
-    private Integer mana;
     private Integer health;
+    private Integer waveNumber;
     private final List<IPlayerValuesChangeObserver> playerValuesChangeObserverList;
 
     public PlayerValues() {
         playerValuesChangeObserverList = new ArrayList<>();
         gold = 300;
-        mana = 100;
         health = 5;
     }
 
@@ -59,12 +58,17 @@ public class PlayerValues implements Runnable {
         Platform.runLater(this);
     }
 
+    public Integer getWaveNumber() {
+        return waveNumber;
+    }
+
+    public void setWaveNumber(Integer waveNumber) {
+        this.waveNumber = waveNumber;
+        Platform.runLater(this);
+    }
 
     public boolean isPlayerDead() {
         return health <= 0;
     }
 
-    public Integer getMana() {
-        return mana;
-    }
 }

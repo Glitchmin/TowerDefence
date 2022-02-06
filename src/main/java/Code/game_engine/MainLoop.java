@@ -42,6 +42,7 @@ public class MainLoop implements Runnable {
         }
         if (map.getEnemies().isEmpty()) {
             waveBuilder.newWave();
+            playerValues.setWaveNumber(waveBuilder.getWaveCounter());
         }
     }
 

@@ -129,7 +129,7 @@ public class Map {
         }
     }
 
-    public void addTurretChangeObserver(ITurretChangeObserver turretChangeObserver) {
+    public void addObserver(ITurretChangeObserver turretChangeObserver) {
         observersList.add(turretChangeObserver);
     }
 

@@ -12,4 +12,10 @@ public enum SpellType {
             case ICE_BOMB -> new MeteorSpell(position);
         };
     }
+    public String getSpellName(){
+        return switch (this){
+            case METEOR -> "Meteor";
+            case ICE_BOMB -> "Ice Bomb";
+        };
+    }
 }
