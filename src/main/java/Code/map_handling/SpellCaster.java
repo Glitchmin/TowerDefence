@@ -13,14 +13,15 @@ public class SpellCaster {
         this.map = map;
         this.playerValues = playerValues;
     }
-    public void castSpell(AbstractSpell spell, Vector2d position){
+
+    public void castSpell(AbstractSpell spell, Vector2d position) {
         if (playerValues.getGold() >= spell.cost) {
             playerValues.removeGold(spell.cost);
             if (spell instanceof MeteorSpell) {
                 map.addMeteor(((MeteorSpell) spell).getMeteor(position));
             }
-            if (spell instanceof SnowballRain){
-                for (Meteor meteor: ((SnowballRain) spell).getMeteorList(position)) {
+            if (spell instanceof SnowballRain) {
+                for (Meteor meteor : ((SnowballRain) spell).getMeteorList(position)) {
                     map.addMeteor(meteor);
                 }
             }

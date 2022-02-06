@@ -20,7 +20,7 @@ public class Map {
     private final Vector2d startPoint;
     private final Vector2d endPoint;
     private final AbstractTurret[][] turretsArray;
-    private final List <AbstractTurret> turretsList;
+    private final List<AbstractTurret> turretsList;
     private final List<Meteor> meteorList;
     private final List<ITurretChangeObserver> observersList;
     private final List<Enemy> enemies;
@@ -42,13 +42,13 @@ public class Map {
         findPaths(pathSwimming, true);
     }
 
-    public void addMeteor(Meteor meteor){
+    public void addMeteor(Meteor meteor) {
         synchronized (this) {
             meteorList.add(meteor);
         }
     }
 
-    public List<Meteor> getMeteorListAndClear(){
+    public List<Meteor> getMeteorListAndClear() {
         synchronized (this) {
             List<Meteor> meteorList1 = new ArrayList<>(meteorList);
             meteorList.clear();
@@ -156,7 +156,7 @@ public class Map {
         if (turretsArray[x][y] == null) {
             turretsArray[x][y] = turret;
             turretsList.add(turret);
-            for (Enemy enemy: getEnemies()){
+            for (Enemy enemy : getEnemies()) {
                 enemy.addObserver(turret);
             }
             turretChanged(x, y);

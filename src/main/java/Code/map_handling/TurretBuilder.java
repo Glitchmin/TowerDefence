@@ -32,7 +32,8 @@ public class TurretBuilder {
             turret.upgrade();
         }
     }
-    public void multiUpgrade(AbstractTurret turret){
+
+    public void multiUpgrade(AbstractTurret turret) {
         while (playerValues.getGold() >= turret.cost) {
             upgrade(turret);
         }
