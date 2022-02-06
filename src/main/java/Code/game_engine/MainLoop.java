@@ -46,6 +46,9 @@ public class MainLoop implements Runnable {
                 if (enemy.reachedEnd()) {
                     playerValues.dealDmg(enemy.getDmg());
                 }
+                if (enemy.isDead()){
+                    playerValues.addGold(enemy.getGoldDrop());
+                }
                 enemiesToDelete.add(enemy);
             }
             enemy.positionChanged();
@@ -57,9 +60,11 @@ public class MainLoop implements Runnable {
 
     public void calcTurrets(){
         for (AbstractTurret turret : map.getTurretsList()){
-            Vector2d firePos = turret.fire(currentTimeMillis());
+            List<Vector2d> firePos = turret.fire(currentTimeMillis());
             if (firePos != null) {
-                mapVisualizer.addLine(turret.getPosition(), firePos);
+                for (Vector2d pos:firePos) {
+                    mapVisualizer.addLine(turret.getPosition(), pos);
+                }
             }
         }
     }
@@ -69,6 +74,7 @@ public class MainLoop implements Runnable {
     public void run() {
         addEnemy();
         addEnemy();
+        map.getEnemies().get(0).freeze(1000);
         while (!playerValues.isPlayerDead()) {
             mapVisualizer.updateTime(System.currentTimeMillis());
             moveEnemies();

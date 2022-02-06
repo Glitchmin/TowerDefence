@@ -3,6 +3,7 @@ package Code.gui;
 import Code.Vector2d;
 import Code.map_handling.AbstractTurret;
 import Code.map_handling.TurretType;
+import Code.map_handling.turrets.ElectricTurret;
 import Code.map_handling.turrets.LaserTurret;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -31,32 +32,36 @@ public class TurretShop {
         nameLabel.setMinWidth(2 * columnWidth);
 
         addTurret(new LaserTurret(null), 0, 0);
+        addTurret(new ElectricTurret(null), 1, 0);
 
         gridPane.setGridLinesVisible(true);
         ImageView cancelImage = new ImageView(ImageLoader.loadImage("src/main/resources/cancel.png"));
         cancelImage.setFitWidth(imageSize * 2);
         cancelImage.setFitHeight(imageSize / 2);
         cancelImage.setOnMouseClicked(Action -> unMarkSelected());
-        shopVBox = new VBox(nameLabel, gridPane, cancelImage,turretObserver.getVBox());
+        shopVBox = new VBox(nameLabel, gridPane, cancelImage, turretObserver.getVBox());
         shopVBox.setPrefWidth(columnWidth * 2);
     }
 
     private void addTurret(AbstractTurret abstractTurret, int x, int y) {
-        VBox laserTurretVBox = new VBox(getImageView(abstractTurret));
-        laserTurretVBox.setOnMouseClicked(Action -> markSelected(laserTurretVBox, abstractTurret));
-        gridPane.add(laserTurretVBox, x, y);
+        VBox TurretVBox = new VBox(getImageView(abstractTurret));
+        TurretVBox.setOnMouseClicked(Action -> markSelected(TurretVBox, abstractTurret, x, y));
+        gridPane.add(TurretVBox, x, y);
     }
 
 
-    public void markSelected(VBox turretVBox, AbstractTurret turret) {
+    public void markSelected(VBox turretVBox, AbstractTurret turret, int x, int y) {
         if (mark == null) {
             selected = turretVBox;
             mark = new ImageView(ImageLoader.loadImage("src/main/resources/mark.png"));
             mark.setFitWidth(imageSize);
             mark.setFitHeight(imageSize);
-            gridPane.add(mark, 0, 0);
+            gridPane.add(mark, x, y);
             if (turret instanceof LaserTurret) {
                 selectedTurret = TurretType.LASER;
+            }
+            if (turret instanceof ElectricTurret) {
+                selectedTurret = TurretType.ELECTRIC;
             }
             turretObserver.updateVBox(selectedTurret.getNewTurret(null));
         }

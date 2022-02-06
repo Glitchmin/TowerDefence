@@ -122,6 +122,10 @@ public class Enemy extends AbstractMapObject {
         hp -= dmg;
     }
 
+    public Integer getGoldDrop() {
+        return goldDrop;
+    }
+
     @Override
     public String getResourcePath() {
         return enemyType.getResourcePath();

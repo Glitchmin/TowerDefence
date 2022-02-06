@@ -1,9 +1,7 @@
 package Code.map_handling.turrets;
 
 import Code.Vector2d;
-import Code.map_handling.AbstractMapObject;
 import Code.map_handling.AbstractTurret;
-import Code.map_handling.Enemy;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
@@ -18,8 +16,6 @@ public class LaserTurret extends AbstractTurret {
     public LaserTurret(Vector2d position) {
         range = 2.0;
         cost = 50;
-        width = 1;
-        height = 1;
         dmg = 5.0;
         rpm = 60.0;
         this.position = position;
@@ -52,12 +48,14 @@ public class LaserTurret extends AbstractTurret {
     }
 
     @Override
-    public Vector2d fire(long currentTime) {
-        if (currentTime-lastTimeFired >= 1000*rpm/60) {
+    public List<Vector2d> fire(long currentTime) {
+        if (currentTime-lastTimeFired >= 1000*60/rpm) {
             if (!targets.isEmpty()) {
                 targets.get(0).decreaseHp(dmg);
                 lastTimeFired = currentTime;
-                return targets.get(0).getPosition();
+                ArrayList<Vector2d> shotsList = new ArrayList<>();
+                shotsList.add(targets.get(0).getPosition());
+                return shotsList;
             }
         }
         return null;

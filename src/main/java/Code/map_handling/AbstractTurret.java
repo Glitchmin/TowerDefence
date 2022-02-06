@@ -11,8 +11,6 @@ import static java.lang.System.out;
 public abstract class AbstractTurret extends AbstractMapObject implements IEnemyChangeObserver {
     protected Double range;
     protected Integer cost;
-    protected Integer width;
-    protected Integer height;
     protected Vector2d position;
     protected Integer level = 1;
     protected boolean isOnMap = false;
@@ -25,7 +23,7 @@ public abstract class AbstractTurret extends AbstractMapObject implements IEnemy
         return ((pos.x - position.x) * (pos.x - position.x) + (pos.y - position.y) * (pos.y - position.y)) <= range * range;
     }
 
-    public abstract Vector2d fire(long currentTime);
+    public abstract List<Vector2d> fire(long currentTime);
 
     @Override
     public void enemyChanged(Enemy enemy) {
@@ -49,13 +47,6 @@ public abstract class AbstractTurret extends AbstractMapObject implements IEnemy
         return cost;
     }
 
-    public Integer getWidth() {
-        return width;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
 
     public Vector2d getPosition() {
         return position;

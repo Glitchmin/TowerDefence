@@ -42,12 +42,12 @@ public class PlayerValues implements Runnable {
 
     public void addGold(Integer gold_increase) {
         gold += gold_increase;
-        valuesChanged();
+        Platform.runLater(this);
     }
 
     public void removeGold(Integer gold_decrease) {
         gold -= gold_decrease;
-        valuesChanged();
+        Platform.runLater(this);
     }
 
     public Integer getHealth() {

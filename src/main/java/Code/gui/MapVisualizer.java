@@ -8,14 +8,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-
-import static java.lang.System.out;
 
 
 public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserver, Runnable {
@@ -28,7 +25,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private final Label landscapeNameOnCursorLabel;
     private final TurretTracker turretObserver;
     private final TurretBuilder turretBuilder;
-    private VBox tmpTurret;
+    private VBox tmpTurretVBox;
     private final TreeMap<Integer, ImageView> enemyImages;
     private final Double tileSize;
     private final List<Enemy> enemiesToRender;
@@ -115,18 +112,20 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
 
 
     private void showTmpTurret(int i, int j) {
-        mapGridPane.getChildren().remove(tmpTurret);
-        if (turretShop.getSelectedTurret() == TurretType.LASER) {
-            tmpTurret = new MapTileBox(new LaserTurret(new Vector2d(i + 0.5, j + 0.5))).getVBox();
-            tmpTurret.setOpacity(0.5);
-            tmpTurret.setOnMouseClicked(Action -> {
-                if (map.getLandscape(i, j).landscapeType == LandscapeType.GRASS
-                        || map.getLandscape(i, j).landscapeType == LandscapeType.HILL) {
-                    turretBuilder.build(i, j, new LaserTurret(new Vector2d(i + 0.5, j + 0.5)));
-                }
-            });
-            mapGridPane.add(tmpTurret, i, j);
-        }
+        mapGridPane.getChildren().remove(tmpTurretVBox);
+            if (turretShop.getSelectedTurret()!=null) {
+                tmpTurretVBox = new MapTileBox(
+                        turretShop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5))).getVBox();
+                tmpTurretVBox.setOpacity(0.5);
+                tmpTurretVBox.setOnMouseClicked(Action -> {
+                    if (map.getLandscape(i, j).landscapeType == LandscapeType.GRASS
+                            || map.getLandscape(i, j).landscapeType == LandscapeType.HILL) {
+                        turretBuilder.build(i, j,
+                                turretShop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5)));
+                    }
+                });
+                mapGridPane.add(tmpTurretVBox, i, j);
+            }
     }
 
     public Label getLandscapeNameOnCursorLabel() {
