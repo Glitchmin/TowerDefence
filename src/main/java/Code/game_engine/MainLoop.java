@@ -4,10 +4,7 @@ import Code.PlayerValues;
 import Code.Vector2d;
 import Code.gui.IEnemyChangeObserver;
 import Code.gui.MapVisualizer;
-import Code.map_handling.AbstractTurret;
-import Code.map_handling.Enemy;
-import Code.map_handling.EnemyType;
-import Code.map_handling.Map;
+import Code.map_handling.*;
 import javafx.application.Platform;
 
 import java.util.ArrayList;
@@ -23,6 +20,7 @@ public class MainLoop implements Runnable {
     private final Map map;
     private final Random random;
     public final WaveBuilder waveBuilder;
+    private final MeteorHandler meteorHandler;
 
 
     public MainLoop(PlayerValues playerValues, MapVisualizer mapVisualizer, Map map) {
@@ -30,6 +28,7 @@ public class MainLoop implements Runnable {
         this.mapVisualizer = mapVisualizer;
         this.map = map;
         this.random = new Random();
+        this.meteorHandler = new MeteorHandler(System.currentTimeMillis(),map);
         waveBuilder = new WaveBuilder();
     }
 
@@ -86,6 +85,7 @@ public class MainLoop implements Runnable {
             addNewEnemies();
             moveEnemies();
             calcTurrets();
+            meteorHandler.calcMeteors(System.currentTimeMillis(), map.getMeteorListAndClear() );
             Platform.runLater(mapVisualizer);
             try {
                 Thread.sleep(10);

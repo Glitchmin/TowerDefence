@@ -30,7 +30,7 @@ public class Shop {
         Label spellShopNameLabel = new Label("spell shop:");
         spellShopNameLabel.setAlignment(Pos.BOTTOM_CENTER);
         spellShopNameLabel.setMinWidth(2 * columnWidth);
-        addSpell(new MeteorSpell(), 0, 0);
+        addSpell(new MeteorSpell(null), 0, 0);
 
         this.turretTracker = turretTracker;
         turretsGridPane = new GridPane();
@@ -63,11 +63,11 @@ public class Shop {
     }
 
 
-    public void markSelected (IShopElement shopElement, int x, int y) {
+    public void markSelected(IShopElement shopElement, int x, int y) {
         unMarkSelected();
-        if (shopElement instanceof AbstractSpell){
+        if (shopElement instanceof AbstractSpell) {
             spellsGridPane.add(mark, x, y);
-            if (shopElement instanceof MeteorSpell){
+            if (shopElement instanceof MeteorSpell) {
                 selectedSpell = SpellType.METEOR;
             }
             turretTracker.updateVBox(null);
@@ -84,10 +84,16 @@ public class Shop {
         return selectedTurret;
     }
 
+    public SpellType getSelectedSpell() {
+        return selectedSpell;
+    }
+
     public void unMarkSelected() {
         turretTracker.updateVBox(null);
         turretsGridPane.getChildren().remove(mark);
         selectedTurret = null;
+        selectedSpell = null;
+        spellsGridPane.getChildren().remove(mark);
     }
 
     public ImageView getImageView(IShopElement shopElement) {

@@ -19,18 +19,15 @@ public abstract class AbstractTurret extends AbstractMapObject implements IEnemy
     public abstract void upgrade();
     protected List<Enemy> targets;
 
-    public boolean isInRange(Vector2d pos) {
-        return ((pos.x - position.x) * (pos.x - position.x) + (pos.y - position.y) * (pos.y - position.y)) <= range * range;
-    }
 
     public abstract List<Vector2d> fire(long currentTime);
 
     @Override
     public void enemyChanged(Enemy enemy) {
-        if (isInRange(enemy.getPosition()) && !targets.contains(enemy)){
+        if (enemy.isInRange(position, range) && !targets.contains(enemy)){
             targets.add(enemy);
         }
-        if (!isInRange(enemy.getPosition()) || enemy.isDead() || enemy.reachedEnd()){
+        if (!enemy.isInRange(position, range) || enemy.isDead() || enemy.reachedEnd()){
             targets.remove(enemy);
         }
     }

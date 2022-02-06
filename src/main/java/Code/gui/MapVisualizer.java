@@ -2,16 +2,23 @@ package Code.gui;
 
 import Code.Vector2d;
 import Code.map_handling.*;
+import Code.map_handling.spells.MeteorSpell;
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+
+import static java.lang.System.out;
 
 public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserver, Runnable {
     private final GridPane mapGridPane;
@@ -23,12 +30,14 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private final Label landscapeNameOnCursorLabel;
     private final TurretBuilder turretBuilder;
     private VBox tmpTurretVBox;
+    private Circle tmpSpellCircle;
     private final TreeMap<Integer, ImageView> enemyImages;
     private final Double tileSize;
     private final List<Enemy> enemiesToRender;
     private final List<Line> linesList;
     private final List<Long> linesExpTimeList;
     private long time;
+    private Vector2d mousePosition;
 
     public MapVisualizer(Map map, Pane paneOfEverything, Shop shop, TurretBuilder turretBuilder, Integer guiElementBoxWidth, Integer guiElementBoxHeight, Double tileSize) {
         enemyImages = new TreeMap<>();
@@ -44,6 +53,8 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         this.linesList = new ArrayList<>();
         this.linesExpTimeList = new ArrayList<>();
         mapGridPane = new GridPane();
+        paneOfEverything.setOnMouseMoved(event -> mousePosition =
+                new Vector2d(event.getX() / tileSize, event.getY() / tileSize));
 
         landscapeBoxes = new MapTileBox[map.getWidth()][map.getHeight()];
         turretBoxes = new MapTileBox[map.getWidth()][map.getHeight()];
@@ -61,7 +72,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         }
     }
 
-    public void updateTime(long time){
+    public void updateTime(long time) {
         this.time = time;
     }
 
@@ -73,18 +84,18 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
             line.setEndX(end.x * tileSize);
             line.setEndY(end.y * tileSize);
             linesList.add(line);
-            linesExpTimeList.add(time+100);
+            linesExpTimeList.add(time + 100);
         }
     }
 
     private void drawLines() {
         synchronized (this) {
-            for (int i=0; i<linesList.size();i++) {
+            for (int i = 0; i < linesList.size(); i++) {
                 Line line = linesList.get(i);
                 if (!paneOfEverything.getChildren().contains(line)) {
                     paneOfEverything.getChildren().add(line);
                 }
-                if (time > linesExpTimeList.get(i)){
+                if (time > linesExpTimeList.get(i)) {
                     paneOfEverything.getChildren().remove(linesList.get(i));
                     linesList.remove(i);
                     linesExpTimeList.remove(i);
@@ -100,28 +111,54 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
                 if (mapTileBox == landscapeBoxes[i][j]) {
                     landscapeNameOnCursorLabel.setText
                             (map.getLandscape(i, j).landscapeType.toString() + " (" + i + "," + j + ")");
-                    showTmpTurret(i, j);
                 }
             }
         }
     }
 
-
-    private void showTmpTurret(int i, int j) {
-        mapGridPane.getChildren().remove(tmpTurretVBox);
-            if (shop.getSelectedTurret()!=null) {
-                tmpTurretVBox = new MapTileBox(
-                        shop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5))).getVBox();
-                tmpTurretVBox.setOpacity(0.5);
-                tmpTurretVBox.setOnMouseClicked(Action -> {
-                    if (map.getLandscape(i, j).landscapeType == LandscapeType.GRASS
-                            || map.getLandscape(i, j).landscapeType == LandscapeType.HILL) {
-                        turretBuilder.build(i, j,
-                                shop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5)));
-                    }
-                });
-                mapGridPane.add(tmpTurretVBox, i, j);
+    private void showSpell() {
+        if (shop.getSelectedSpell() != null && mousePosition.x < map.getWidth() && mousePosition.y < map.getHeight()) {
+            if (tmpSpellCircle==null){
+                tmpSpellCircle = new Circle();
+                tmpSpellCircle.setRadius(shop.getSelectedSpell().getNewSpell(mousePosition).getRadius() * tileSize);
+                tmpSpellCircle.setOpacity(0.3);
+                paneOfEverything.getChildren().add(tmpSpellCircle);
+                if (shop.getSelectedSpell()==SpellType.METEOR){
+                    MeteorSpell meteorSpell = (MeteorSpell) shop.getSelectedSpell().getNewSpell(mousePosition);
+                    out.println("hmm1"+tmpSpellCircle);
+                    tmpSpellCircle.setOnMouseClicked(Action -> map.addMeteor(meteorSpell.getMeteor(mousePosition)));
+                }
             }
+            tmpSpellCircle.setCenterX(mousePosition.x * tileSize);
+            tmpSpellCircle.setCenterY(mousePosition.y * tileSize);
+        }
+        if (shop.getSelectedSpell() == null){
+            paneOfEverything.getChildren().remove(tmpSpellCircle);
+            tmpSpellCircle = null;
+        }
+    }
+
+
+    private void showTmpTurret() {
+        if (mousePosition == null) {
+            return;
+        }
+        int i = mousePosition.IntX();
+        int j = mousePosition.IntY();
+        mapGridPane.getChildren().remove(tmpTurretVBox);
+        if (shop.getSelectedTurret() != null && mousePosition.x < map.getWidth() && mousePosition.y < map.getHeight()) {
+            tmpTurretVBox = new MapTileBox(
+                    shop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5))).getVBox();
+            tmpTurretVBox.setOpacity(0.5);
+            tmpTurretVBox.setOnMouseClicked(Action -> {
+                if (map.getLandscape(i, j).landscapeType == LandscapeType.GRASS
+                        || map.getLandscape(i, j).landscapeType == LandscapeType.HILL) {
+                    turretBuilder.build(i, j,
+                            shop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5)));
+                }
+            });
+            mapGridPane.add(tmpTurretVBox, i, j);
+        }
     }
 
     public Label getLandscapeNameOnCursorLabel() {
@@ -165,6 +202,8 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     public void run() {
         updateEnemies();
         drawLines();
+        showSpell();
+        showTmpTurret();
     }
 
     @Override

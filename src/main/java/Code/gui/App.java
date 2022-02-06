@@ -3,6 +3,7 @@ package Code.gui;
 import Code.PlayerValues;
 import Code.game_engine.MainLoop;
 import Code.map_handling.Map;
+import Code.map_handling.MeteorHandler;
 import Code.map_handling.TurretBuilder;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -25,12 +26,9 @@ public class App extends Application {
     private MapVisualizer mapVisualizer;
     private PlayerValues playerValues;
     private ValuesVisualizer valuesVisualizer;
-    private TurretTracker turretObserver;
-    private TurretBuilder turretBuilder;
 
     @Override
     public void init() {
-        out.println("init");
         gridPaneOfEverything = new GridPane();
         paneOfEverything = new Pane();
         paneOfEverything.getChildren().add(gridPaneOfEverything);

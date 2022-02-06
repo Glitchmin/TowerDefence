@@ -21,6 +21,7 @@ public class Map {
     private final Vector2d endPoint;
     private final AbstractTurret[][] turretsArray;
     private final List <AbstractTurret> turretsList;
+    private final List<Meteor> meteorList;
     private final List<ITurretChangeObserver> observersList;
     private final List<Enemy> enemies;
     private final List<PathTile> pathNoSwimming;
@@ -32,12 +33,23 @@ public class Map {
         endPoint = new Vector2d(0.0, 11.0);
         turretsArray = new AbstractTurret[width][height];
         turretsList = new ArrayList<>();
+        meteorList = new ArrayList<>();
         observersList = new ArrayList<>();
         enemies = new Vector<>();
         pathNoSwimming = new ArrayList<>();
         pathSwimming = new ArrayList<>();
         findPaths(pathNoSwimming, false);
         findPaths(pathSwimming, true);
+    }
+
+    public void addMeteor(Meteor meteor){
+        meteorList.add(meteor);
+    }
+
+    public List<Meteor> getMeteorListAndClear(){
+        List<Meteor> meteorList1 = new ArrayList<>(meteorList);
+        meteorList.clear();
+        return meteorList1;
     }
 
     private void findPaths(List<PathTile> path, boolean swimming) {

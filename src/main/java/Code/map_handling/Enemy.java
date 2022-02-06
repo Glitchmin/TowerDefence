@@ -81,6 +81,10 @@ public class Enemy extends AbstractMapObject {
         setParametersFromType(enemyType, 0);
     }
 
+    public boolean isInRange(Vector2d pos, double range) {
+        return ((pos.x - position.x) * (pos.x - position.x) + (pos.y - position.y) * (pos.y - position.y)) <= range * range;
+    }
+
     public Integer getID() {
         return ID;
     }
