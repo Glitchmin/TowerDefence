@@ -3,6 +3,7 @@ package Code.map_handling;
 import Code.PlayerValues;
 import Code.Vector2d;
 import Code.map_handling.spells.MeteorSpell;
+import Code.map_handling.spells.SnowballRain;
 
 public class SpellCaster {
     private final Map map;
@@ -17,6 +18,11 @@ public class SpellCaster {
             playerValues.removeGold(spell.cost);
             if (spell instanceof MeteorSpell) {
                 map.addMeteor(((MeteorSpell) spell).getMeteor(position));
+            }
+            if (spell instanceof SnowballRain){
+                for (Meteor meteor: ((SnowballRain) spell).getMeteorList(position)) {
+                    map.addMeteor(meteor);
+                }
             }
         }
     }

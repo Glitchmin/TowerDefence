@@ -14,12 +14,12 @@ public class MeteorSpell extends AbstractSpell implements IShopElement {
     public MeteorSpell(Vector2d position) {
         cost = 150;
         radius = 1.0;
-        meteor = new Meteor(position, 100.0, 500, radius);
+        meteor = new Meteor(position, 100.0, 500, radius, SpellType.METEOR);
         spellType = SpellType.METEOR;
     }
 
     public Meteor getMeteor(Vector2d position) {
-        return new Meteor(position, meteor.getDmg(), meteor.getFreezeTime(), meteor.getRadius());
+        return new Meteor(position, meteor.getDmg(), meteor.getFreezeTime(), meteor.getRadius(), SpellType.METEOR);
     }
 
     @Override

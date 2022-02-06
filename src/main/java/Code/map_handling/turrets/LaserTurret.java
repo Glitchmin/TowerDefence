@@ -15,12 +15,16 @@ public class LaserTurret extends AbstractTurret {
     private Double rpm;
     private long lastTimeFired;
 
-    public LaserTurret(Vector2d position) {
+    public LaserTurret(Vector2d position, boolean isOnHill) {
         range = 2.0;
+        if (isOnHill){
+            range += 0.5;
+        }
         cost = 50;
         dmg = 5.0;
         rpm = 60.0;
         this.position = position;
+        this.isOnHill = isOnHill;
         targets = new ArrayList<>();
     }
 
@@ -36,9 +40,13 @@ public class LaserTurret extends AbstractTurret {
 
     @Override
     public VBox getDescriptionVBox() {
+        String hillText="";
+        if (isOnHill){
+            hillText = "placed on a hill (+0.5 range)";
+        }
         return new VBox(new Label("range: " + range), new Label("dmg: " + dmg),
                 new Label("attack speed: " + rpm + " rpm"), new Label("cost: " + cost),
-                new Label("level: " + level));
+                new Label("level: " + level), new Label(hillText));
     }
 
     @Override

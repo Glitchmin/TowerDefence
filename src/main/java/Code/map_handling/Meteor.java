@@ -11,13 +11,15 @@ public class Meteor {
     protected final long freezeTime;
     private final Integer ID;
     private static Integer meteorCounter = 0;
+    private final SpellType spellType;
 
-    public Meteor(Vector2d position, double dmg, long freezeTime, double radius) {
+    public Meteor(Vector2d position, double dmg, long freezeTime, double radius, SpellType spellType) {
         this.h = 4.0;
         this.dmg = dmg;
         this.freezeTime = freezeTime;
         this.radius = radius;
         this.position = position;
+        this.spellType = spellType;
         ID = meteorCounter++;
     }
 
@@ -33,6 +35,10 @@ public class Meteor {
         return h;
     }
 
+    public void setH(Double h) {
+        this.h = h;
+    }
+
     public double getDmg() {
         return dmg;
     }
@@ -46,6 +52,6 @@ public class Meteor {
     }
 
     public String getResourcePath() {
-        return new MeteorSpell(null).getResourcePath();
+        return spellType.getResourcePath();
     }
 }

@@ -27,5 +27,8 @@ public class ValuesVisualizer implements IPlayerValuesChangeObserver {
         goldLabel.setText("gold: "+playerValues.getGold());
         healthLabel.setText("health: "+playerValues.getHealth());
         waveLabel.setText("wave: "+playerValues.getWaveNumber());
+        if (playerValues.getWaveNumber()==null){
+            waveLabel.setText("wave: "+0);
+        }
     }
 }

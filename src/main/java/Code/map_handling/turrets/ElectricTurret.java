@@ -15,14 +15,18 @@ public class ElectricTurret extends AbstractTurret {
     private Double rpm;
     private long lastTimeFired;
     private Integer targetsAmount;
-    public ElectricTurret(Vector2d position) {
+    public ElectricTurret(Vector2d position, boolean isOnHill) {
         range = 1.5;
+        if (isOnHill){
+            range+=0.5;
+        }
         cost = 60;
         dmg = 3.0;
         rpm = 120.0;
         targetsAmount=3;
         this.position = position;
         targets = new ArrayList<>();
+        this.isOnHill = isOnHill;
     }
 
     @Override
@@ -63,9 +67,14 @@ public class ElectricTurret extends AbstractTurret {
 
     @Override
     public VBox getDescriptionVBox() {
+        String hillText="";
+        if (isOnHill){
+            hillText = "placed on a hill (+0.5 range)";
+        }
         return new VBox(new Label("range: " + range), new Label("dmg: " + dmg),
                 new Label("attack speed: " + rpm + " rpm"), new Label("cost: " + cost),
-                new Label("targets amount: "+targetsAmount),new Label("level: " + level));
+                new Label("targets amount: "+targetsAmount),new Label("level: " + level),
+                new Label(hillText));
     }
 
     @Override

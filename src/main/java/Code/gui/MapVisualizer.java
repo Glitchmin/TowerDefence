@@ -3,6 +3,7 @@ package Code.gui;
 import Code.Vector2d;
 import Code.map_handling.*;
 import Code.map_handling.spells.MeteorSpell;
+import Code.map_handling.spells.SnowballRain;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -140,6 +141,10 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
                     MeteorSpell meteorSpell = (MeteorSpell) shop.getSelectedSpell().getNewSpell(mousePosition);
                     tmpSpellCircle.setOnMouseClicked(Action -> spellCaster.castSpell(meteorSpell,mousePosition));
                 }
+                if (shop.getSelectedSpell() == SpellType.SNOWBALL_RAIN) {
+                    SnowballRain snowballRain = (SnowballRain) shop.getSelectedSpell().getNewSpell(mousePosition);
+                    tmpSpellCircle.setOnMouseClicked(Action -> spellCaster.castSpell(snowballRain,mousePosition));
+                }
             }
             tmpSpellCircle.toFront();
             tmpSpellCircle.setCenterX(mousePosition.x * tileSize);
@@ -157,7 +162,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
             if (tmpTurretVBox == null) {
                 tmpTurretVBox = new MapTileBox(
                         shop.getSelectedTurret().getNewTurret(new Vector2d(mousePosition.IntX() + 0.5,
-                                mousePosition.IntY() + 0.5))).getVBox();
+                                mousePosition.IntY() + 0.5),false)).getVBox();
                 tmpTurretVBox.setOpacity(0.5);
                 mapGridPane.add(tmpTurretVBox, mousePosition.IntX(), mousePosition.IntY());
                 tmpTurretVBox.setOnMouseClicked(Action -> addTurret());
@@ -179,7 +184,8 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         if (map.getLandscape(i, j).landscapeType == LandscapeType.GRASS
                 || map.getLandscape(i, j).landscapeType == LandscapeType.HILL) {
             turretBuilder.build(i, j,
-                    shop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5)));
+                    shop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5),
+                            map.getLandscape(i,j).landscapeType == LandscapeType.HILL));
         }
     }
 

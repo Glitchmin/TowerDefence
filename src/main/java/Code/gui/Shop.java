@@ -2,6 +2,7 @@ package Code.gui;
 
 import Code.map_handling.*;
 import Code.map_handling.spells.MeteorSpell;
+import Code.map_handling.spells.SnowballRain;
 import Code.map_handling.turrets.ElectricTurret;
 import Code.map_handling.turrets.LaserTurret;
 import javafx.geometry.Pos;
@@ -31,14 +32,15 @@ public class Shop {
         spellShopNameLabel.setAlignment(Pos.BOTTOM_CENTER);
         spellShopNameLabel.setMinWidth(2 * columnWidth);
         addSpell(new MeteorSpell(null), 0, 0);
+        addSpell(new SnowballRain(null), 1, 0);
 
         this.shopItemsTracker = shopItemsTracker;
         turretsGridPane = new GridPane();
         Label turretShopNameLabel = new Label("turret shop:");
         turretShopNameLabel.setAlignment(Pos.BOTTOM_CENTER);
         turretShopNameLabel.setMinWidth(2 * columnWidth);
-        addTurret(new LaserTurret(null), 0, 0);
-        addTurret(new ElectricTurret(null), 1, 0);
+        addTurret(new LaserTurret(null, false), 0, 0);
+        addTurret(new ElectricTurret(null, false), 1, 0);
         turretsGridPane.add(shopItemsTracker.getVBox(), 0, 1, 1, 2);
         turretsGridPane.setGridLinesVisible(true);
 
@@ -70,13 +72,16 @@ public class Shop {
             if (shopElement instanceof MeteorSpell) {
                 selectedSpell = SpellType.METEOR;
             }
+            if (shopElement instanceof SnowballRain){
+                selectedSpell = SpellType.SNOWBALL_RAIN;
+            }
             shopItemsTracker.updateVBox(selectedSpell.getNewSpell(null));
         }
 
         if (shopElement instanceof AbstractTurret) {
             turretsGridPane.add(mark, x, y);
             selectedTurret = TurretType.turretTypeFromClass((AbstractTurret) shopElement);
-            shopItemsTracker.updateVBox(selectedTurret.getNewTurret(null));
+            shopItemsTracker.updateVBox(selectedTurret.getNewTurret(null, false));
         }
     }
 

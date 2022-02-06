@@ -14,6 +14,7 @@ public abstract class AbstractTurret extends AbstractMapObject implements IEnemy
     protected Vector2d position;
     protected Integer level = 1;
     protected boolean isOnMap = false;
+    protected boolean isOnHill = false;
     public abstract String getTurretName();
     public abstract VBox getDescriptionVBox();
     public abstract void upgrade();
