@@ -9,10 +9,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.System.out;
 
@@ -36,7 +33,7 @@ public class Map {
         turretsArray = new AbstractTurret[width][height];
         turretsList = new ArrayList<>();
         observersList = new ArrayList<>();
-        enemies = new ArrayList<>();
+        enemies = new Vector<>();
         pathNoSwimming = new ArrayList<>();
         pathSwimming = new ArrayList<>();
         findPaths(pathNoSwimming, false);

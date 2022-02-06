@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import static java.lang.System.out;
+
 
 public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserver, Runnable {
     private final GridPane mapGridPane;
@@ -90,8 +92,8 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
                 }
                 if (time > linesExpTimeList.get(i)){
                     paneOfEverything.getChildren().remove(linesList.get(i));
-                    linesList.remove(linesList.get(i));
-                    linesExpTimeList.remove(linesExpTimeList.get(i));
+                    linesList.remove(i);
+                    linesExpTimeList.remove(i);
                     i--;
                 }
             }
@@ -161,6 +163,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
                     enemyImages.remove(enemy.getID());
                 }
             }
+            enemiesToRender.clear();
         }
     }
 

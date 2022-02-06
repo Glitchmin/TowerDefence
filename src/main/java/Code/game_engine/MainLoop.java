@@ -33,14 +33,14 @@ public class MainLoop implements Runnable {
         waveBuilder = new WaveBuilder();
     }
 
-    private void addNewEnemies(){
+    private void addNewEnemies() {
         EnemyType enemyType = waveBuilder.getEnemy(System.currentTimeMillis());
         if (enemyType != null) {
-            Enemy enemy = new Enemy(enemyType,waveBuilder.getWaveCounter(), System.currentTimeMillis(), map, map.getTurretsList());
+            Enemy enemy = new Enemy(enemyType, waveBuilder.getWaveCounter(), System.currentTimeMillis(), map, map.getTurretsList());
             enemy.addObserver(mapVisualizer);
             map.addEnemy(enemy);
         }
-        if (map.getEnemies().isEmpty()){
+        if (map.getEnemies().isEmpty()) {
             waveBuilder.newWave();
         }
     }
@@ -55,7 +55,7 @@ public class MainLoop implements Runnable {
                 if (enemy.reachedEnd()) {
                     playerValues.dealDmg(enemy.getDmg());
                 }
-                if (enemy.isDead()){
+                if (enemy.isDead()) {
                     playerValues.addGold(enemy.getGoldDrop());
                 }
                 enemiesToDelete.add(enemy);
@@ -67,11 +67,11 @@ public class MainLoop implements Runnable {
         }
     }
 
-    public void calcTurrets(){
-        for (AbstractTurret turret : map.getTurretsList()){
+    public void calcTurrets() {
+        for (AbstractTurret turret : map.getTurretsList()) {
             List<Vector2d> firePos = turret.fire(currentTimeMillis());
             if (firePos != null) {
-                for (Vector2d pos:firePos) {
+                for (Vector2d pos : firePos) {
                     mapVisualizer.addLine(turret.getPosition(), pos);
                 }
             }

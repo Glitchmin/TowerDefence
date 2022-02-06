@@ -17,7 +17,7 @@ public class WaveBuilder {
 
     public WaveBuilder() {
         enemies = new ArrayList<>();
-        goldForWave = 100;
+        goldForWave = 60;
         waveCounter = 0;
         deployDelay = 200;
         random = new Random();
@@ -34,7 +34,7 @@ public class WaveBuilder {
                 goldToSpend-=enemyToAdd.getGoldDrop();
             }
         }
-        goldForWave = (int) (goldForWave * 1.5);
+        goldForWave = (int) (goldForWave * 1.2);
     }
 
     public EnemyType getEnemy(long currentTime) {

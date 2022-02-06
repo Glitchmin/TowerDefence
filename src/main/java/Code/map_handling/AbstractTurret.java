@@ -30,7 +30,7 @@ public abstract class AbstractTurret extends AbstractMapObject implements IEnemy
         if (isInRange(enemy.getPosition()) && !targets.contains(enemy)){
             targets.add(enemy);
         }
-        if (!isInRange(enemy.getPosition()) || enemy.isDead()){
+        if (!isInRange(enemy.getPosition()) || enemy.isDead() || enemy.reachedEnd()){
             targets.remove(enemy);
         }
     }

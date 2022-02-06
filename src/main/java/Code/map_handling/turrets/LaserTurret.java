@@ -8,6 +8,8 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.out;
+
 public class LaserTurret extends AbstractTurret {
     private Double dmg;
     private Double rpm;

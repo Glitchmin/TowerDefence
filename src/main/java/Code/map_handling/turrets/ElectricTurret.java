@@ -8,6 +8,8 @@ import javafx.scene.layout.VBox;
 
 import java.util.*;
 
+import static java.lang.System.out;
+
 public class ElectricTurret extends AbstractTurret {
     private Double dmg;
     private Double rpm;
