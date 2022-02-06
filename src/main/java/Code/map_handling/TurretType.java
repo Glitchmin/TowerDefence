@@ -6,14 +6,12 @@ import Code.map_handling.turrets.LaserTurret;
 
 public enum TurretType {
     LASER,
-    MORTAR,
     ELECTRIC;
 
     public AbstractTurret getNewTurret(Vector2d position,boolean isOnHill) {
         return switch (this) {
             case LASER -> new LaserTurret(position, isOnHill);
             case ELECTRIC -> new ElectricTurret(position, isOnHill);
-            default -> new LaserTurret(position, isOnHill);
         };
     }
     public static TurretType turretTypeFromClass(AbstractTurret turret){

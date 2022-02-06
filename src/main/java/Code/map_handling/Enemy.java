@@ -45,26 +45,26 @@ public class Enemy extends AbstractMapObject {
         switch (enemyType) {
             case TANK -> {
                 speed = 0.9;
-                hp = 50.0+12.0*level;
+                hp = 50.0+10.0*level;
                 goldDrop = 10;
                 dmg = 1;
             }
             case RUNNER -> {
                 speed = 3.5+0.1*level;
-                hp = 10.0+4*level;
+                hp = 10.0+3*level;
                 goldDrop = 15;
                 dmg = 2;
             }
             case SWIMMER -> {
                 speed = 1.5;
-                hp = 15.0+7*level;
+                hp = 15.0+5*level;
                 goldDrop = 20;
                 dmg = 1;
                 canSwim = true;
             }
             default -> {
                 speed = 1.5+0.1*level;
-                hp = 12.0+5.0*level;
+                hp = 12.0+4.0*level;
                 goldDrop = 10;
                 dmg = 1;
             }

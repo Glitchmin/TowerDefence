@@ -5,7 +5,9 @@ import Code.Vector2d;
 import Code.gui.IEnemyChangeObserver;
 import Code.gui.MapVisualizer;
 import Code.map_handling.*;
+import Code.map_handling.turrets.LaserTurret;
 import javafx.application.Platform;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +82,11 @@ public class MainLoop implements Runnable {
             List<Vector2d> firePos = turret.fire(currentTimeMillis());
             if (firePos != null) {
                 for (Vector2d pos : firePos) {
-                    mapVisualizer.addLine(turret.getPosition(), pos);
+                    if (turret instanceof LaserTurret) {
+                        mapVisualizer.addLine(turret.getPosition(), pos, Color.RED);
+                    }else{
+                        mapVisualizer.addLine(turret.getPosition(), pos, Color.YELLOW);
+                    }
                 }
             }
         }

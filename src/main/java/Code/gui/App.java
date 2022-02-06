@@ -46,7 +46,6 @@ public class App extends Application {
 
         gridPaneOfEverything.add(valuesVisualizer.getLabelsVBox(), 0, 1);
         valuesVisualizer.valuesChanged();
-        gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 1, 2);
         map.addObserver(mapVisualizer);
         gridPaneOfEverything.add(shop.getVbox(), 1, 0);
 

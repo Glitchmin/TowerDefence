@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
+import static java.lang.System.out;
+
 public class Shop {
     private final GridPane turretsGridPane;
     private final GridPane spellsGridPane;

@@ -16,10 +16,10 @@ public class SnowballRain extends AbstractSpell {
     private final int numberOfSnowballs;
 
     public SnowballRain(Vector2d position) {
-        cost = 100;
+        cost = 50;
         radius = 1.5;
         numberOfSnowballs = 15;
-        meteor = new Meteor(position, 2.0, 1500, 0.3, SpellType.SNOWBALL_RAIN);
+        meteor = new Meteor(position, 2.0, 1500, 0.4, SpellType.SNOWBALL_RAIN);
         spellType = SpellType.METEOR;
     }
 
@@ -31,7 +31,7 @@ public class SnowballRain extends AbstractSpell {
                     position.y+(double)random.nextInt((int)(16*radius))/10-(double)((int)(8*radius))/10);
             Meteor meteor1 = new Meteor(pos, meteor.getDmg(), meteor.getFreezeTime(),
                     meteor.getRadius(), SpellType.SNOWBALL_RAIN);
-            meteor1.setH(3.0+(double)random.nextInt(20)/10);
+            meteor1.setH(3.0+(double)random.nextInt(120)/10);
             meteorList.add(meteor1);
 
         }
