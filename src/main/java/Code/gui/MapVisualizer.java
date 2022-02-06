@@ -3,13 +3,10 @@ package Code.gui;
 import Code.Vector2d;
 import Code.map_handling.*;
 import Code.map_handling.spells.MeteorSpell;
-import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -18,9 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import static java.lang.System.out;
-
-public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserver, Runnable {
+public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserver, IMeteorObserver, Runnable {
     private final GridPane mapGridPane;
     private final Pane paneOfEverything;
     private final Map map;
@@ -38,9 +33,13 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private final List<Long> linesExpTimeList;
     private long time;
     private Vector2d mousePosition;
+    private final List<Meteor> meteorsToRender;
+    private final TreeMap<Integer, ImageView> meteorImages;
+
 
     public MapVisualizer(Map map, Pane paneOfEverything, Shop shop, TurretBuilder turretBuilder, Integer guiElementBoxWidth, Integer guiElementBoxHeight, Double tileSize) {
         enemyImages = new TreeMap<>();
+        meteorImages = new TreeMap<>();
         this.tileSize = tileSize;
         this.paneOfEverything = paneOfEverything;
         landscapeNameOnCursorLabel = new Label("");
@@ -50,6 +49,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         this.shop = shop;
         this.turretBuilder = turretBuilder;
         this.enemiesToRender = new ArrayList<>();
+        this.meteorsToRender = new ArrayList<>();
         this.linesList = new ArrayList<>();
         this.linesExpTimeList = new ArrayList<>();
         mapGridPane = new GridPane();
@@ -105,6 +105,11 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         }
     }
 
+    @Override
+    public void MeteorChanged(Meteor meteor) {
+        meteorsToRender.add(meteor);
+    }
+
     private void handleCursorOnMapTile(MapTileBox mapTileBox) {
         for (int i = 0; i < map.getWidth(); i++) {
             for (int j = 0; j < map.getHeight(); j++) {
@@ -118,21 +123,20 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
 
     private void showSpell() {
         if (shop.getSelectedSpell() != null && mousePosition.x < map.getWidth() && mousePosition.y < map.getHeight()) {
-            if (tmpSpellCircle==null){
+            if (tmpSpellCircle == null) {
                 tmpSpellCircle = new Circle();
                 tmpSpellCircle.setRadius(shop.getSelectedSpell().getNewSpell(mousePosition).getRadius() * tileSize);
                 tmpSpellCircle.setOpacity(0.3);
                 paneOfEverything.getChildren().add(tmpSpellCircle);
-                if (shop.getSelectedSpell()==SpellType.METEOR){
+                if (shop.getSelectedSpell() == SpellType.METEOR) {
                     MeteorSpell meteorSpell = (MeteorSpell) shop.getSelectedSpell().getNewSpell(mousePosition);
-                    out.println("hmm1"+tmpSpellCircle);
                     tmpSpellCircle.setOnMouseClicked(Action -> map.addMeteor(meteorSpell.getMeteor(mousePosition)));
                 }
             }
             tmpSpellCircle.setCenterX(mousePosition.x * tileSize);
             tmpSpellCircle.setCenterY(mousePosition.y * tileSize);
         }
-        if (shop.getSelectedSpell() == null){
+        if (shop.getSelectedSpell() == null) {
             paneOfEverything.getChildren().remove(tmpSpellCircle);
             tmpSpellCircle = null;
         }
@@ -198,9 +202,31 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         }
     }
 
+    public void updateMeteors() {
+        synchronized (map) {
+            for (Meteor meteor : meteorsToRender) {
+                ImageView meteorImageView = meteorImages.get(meteor.getID());
+                if (meteorImageView == null) {
+                    meteorImageView = new ImageView(ImageLoader.loadImage(meteor.getResourcePath()));
+                    meteorImages.put(meteor.getID(), meteorImageView);
+                    paneOfEverything.getChildren().add(meteorImages.get(meteor.getID()));
+                    meteorImageView.setFitHeight(tileSize * meteor.getRadius() * 2);
+                    meteorImageView.setFitWidth(tileSize * meteor.getRadius() * 2);
+                    meteorImageView.setX((meteor.getPosition().x-meteor.getRadius()) * tileSize);
+                }
+                meteorImageView.setY(((meteor.getPosition().y - meteor.getH() - meteor.getRadius()) * tileSize));
+                if (meteor.getH() <= 0) {
+                    paneOfEverything.getChildren().remove(meteorImageView);
+                    meteorImages.remove(meteor.getID());
+                }
+            }
+        }
+    }
+
     @Override
     public void run() {
         updateEnemies();
+        updateMeteors();
         drawLines();
         showSpell();
         showTmpTurret();

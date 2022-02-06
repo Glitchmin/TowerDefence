@@ -29,6 +29,7 @@ public class MainLoop implements Runnable {
         this.map = map;
         this.random = new Random();
         this.meteorHandler = new MeteorHandler(System.currentTimeMillis(),map);
+        meteorHandler.addObserver(mapVisualizer);
         waveBuilder = new WaveBuilder();
     }
 

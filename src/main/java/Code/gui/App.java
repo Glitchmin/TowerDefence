@@ -3,7 +3,6 @@ package Code.gui;
 import Code.PlayerValues;
 import Code.game_engine.MainLoop;
 import Code.map_handling.Map;
-import Code.map_handling.MeteorHandler;
 import Code.map_handling.TurretBuilder;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -11,8 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
-import static java.lang.System.out;
 
 public class App extends Application {
 
@@ -52,7 +49,7 @@ public class App extends Application {
         gridPaneOfEverything.add(valuesVisualizer.getLabelsVBox(), 0, 1);
         valuesVisualizer.valuesChanged();
         gridPaneOfEverything.add(mapVisualizer.getLandscapeNameOnCursorLabel(), 2, 0);
-        map.addObserver(mapVisualizer);
+        map.addTurretChangeObserver(mapVisualizer);
 
         MainLoop mainLoop = new MainLoop(playerValues, mapVisualizer, map);
         Thread mainLoopThread = new Thread(mainLoop);

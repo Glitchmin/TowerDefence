@@ -43,13 +43,17 @@ public class Map {
     }
 
     public void addMeteor(Meteor meteor){
-        meteorList.add(meteor);
+        synchronized (this) {
+            meteorList.add(meteor);
+        }
     }
 
     public List<Meteor> getMeteorListAndClear(){
-        List<Meteor> meteorList1 = new ArrayList<>(meteorList);
-        meteorList.clear();
-        return meteorList1;
+        synchronized (this) {
+            List<Meteor> meteorList1 = new ArrayList<>(meteorList);
+            meteorList.clear();
+            return meteorList1;
+        }
     }
 
     private void findPaths(List<PathTile> path, boolean swimming) {
@@ -125,7 +129,7 @@ public class Map {
         }
     }
 
-    public void addObserver(ITurretChangeObserver turretChangeObserver) {
+    public void addTurretChangeObserver(ITurretChangeObserver turretChangeObserver) {
         observersList.add(turretChangeObserver);
     }
 
