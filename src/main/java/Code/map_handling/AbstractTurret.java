@@ -8,7 +8,7 @@ import java.util.List;
 
 import static java.lang.System.out;
 
-public abstract class AbstractTurret extends AbstractMapObject implements IEnemyChangeObserver {
+public abstract class AbstractTurret extends AbstractMapObject implements IEnemyChangeObserver, IShopElement {
     protected Double range;
     protected Integer cost;
     protected Vector2d position;

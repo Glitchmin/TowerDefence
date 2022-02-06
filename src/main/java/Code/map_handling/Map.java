@@ -37,9 +37,7 @@ public class Map {
         pathNoSwimming = new ArrayList<>();
         pathSwimming = new ArrayList<>();
         findPaths(pathNoSwimming, false);
-        out.println(pathNoSwimming);
         findPaths(pathSwimming, true);
-        out.println(pathSwimming);
     }
 
     private void findPaths(List<PathTile> path, boolean swimming) {

@@ -2,13 +2,9 @@ package Code.map_handling;
 
 import Code.PlayerValues;
 import Code.gui.ITurretChangeObserver;
-import Code.gui.MapVisualizer;
-import Code.gui.TurretShop;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.System.out;
 
 public class TurretBuilder {
     private Map map;

@@ -16,4 +16,13 @@ public enum TurretType {
             default -> new LaserTurret(position);
         };
     }
+    public static TurretType turretTypeFromClass(AbstractTurret turret){
+        if (turret instanceof LaserTurret){
+            return LASER;
+        }
+        if (turret instanceof ElectricTurret){
+            return ELECTRIC;
+        }
+        return null;
+    }
 }

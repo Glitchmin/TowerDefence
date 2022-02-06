@@ -9,10 +9,7 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
-import java.util.Stack;
 
 import static java.lang.System.out;
 
@@ -41,12 +38,12 @@ public class App extends Application {
         playerValues = new PlayerValues();
 
         TurretBuilder turretBuilder = new TurretBuilder(map, playerValues);
-        TurretTracker turretObserver = new TurretTracker(turretBuilder);
-        TurretShop turretShop = new TurretShop((1400 - 1200) / 2, turretObserver);
+        TurretTracker turretTracker = new TurretTracker(turretBuilder);
+        Shop shop = new Shop((1400 - 1200) / 2, turretTracker);
 
-        gridPaneOfEverything.add(turretShop.getVbox(), 1, 0);
+        gridPaneOfEverything.add(shop.getVbox(), 1, 0);
 
-        mapVisualizer = new MapVisualizer(map,paneOfEverything, turretShop, turretObserver, turretBuilder,
+        mapVisualizer = new MapVisualizer(map,paneOfEverything, shop, turretBuilder,
                 mapWidth / map.getWidth(), mapHeight / map.getHeight(),
                 (double)1200/map.getWidth());
 

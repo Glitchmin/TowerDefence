@@ -2,7 +2,6 @@ package Code.gui;
 
 import Code.Vector2d;
 import Code.map_handling.*;
-import Code.map_handling.turrets.LaserTurret;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -14,18 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import static java.lang.System.out;
-
-
 public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserver, Runnable {
     private final GridPane mapGridPane;
     private final Pane paneOfEverything;
     private final Map map;
     private final MapTileBox[][] landscapeBoxes;
     private final MapTileBox[][] turretBoxes;
-    private final TurretShop turretShop;
+    private final Shop shop;
     private final Label landscapeNameOnCursorLabel;
-    private final TurretTracker turretObserver;
     private final TurretBuilder turretBuilder;
     private VBox tmpTurretVBox;
     private final TreeMap<Integer, ImageView> enemyImages;
@@ -35,7 +30,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private final List<Long> linesExpTimeList;
     private long time;
 
-    public MapVisualizer(Map map, Pane paneOfEverything, TurretShop turretShop, TurretTracker turretObserver, TurretBuilder turretBuilder, Integer guiElementBoxWidth, Integer guiElementBoxHeight, Double tileSize) {
+    public MapVisualizer(Map map, Pane paneOfEverything, Shop shop, TurretBuilder turretBuilder, Integer guiElementBoxWidth, Integer guiElementBoxHeight, Double tileSize) {
         enemyImages = new TreeMap<>();
         this.tileSize = tileSize;
         this.paneOfEverything = paneOfEverything;
@@ -43,8 +38,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         MapTileBox.setWidth(guiElementBoxWidth);
         MapTileBox.setHeight(guiElementBoxHeight);
         this.map = map;
-        this.turretShop = turretShop;
-        this.turretObserver = turretObserver;
+        this.shop = shop;
         this.turretBuilder = turretBuilder;
         this.enemiesToRender = new ArrayList<>();
         this.linesList = new ArrayList<>();
@@ -115,15 +109,15 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
 
     private void showTmpTurret(int i, int j) {
         mapGridPane.getChildren().remove(tmpTurretVBox);
-            if (turretShop.getSelectedTurret()!=null) {
+            if (shop.getSelectedTurret()!=null) {
                 tmpTurretVBox = new MapTileBox(
-                        turretShop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5))).getVBox();
+                        shop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5))).getVBox();
                 tmpTurretVBox.setOpacity(0.5);
                 tmpTurretVBox.setOnMouseClicked(Action -> {
                     if (map.getLandscape(i, j).landscapeType == LandscapeType.GRASS
                             || map.getLandscape(i, j).landscapeType == LandscapeType.HILL) {
                         turretBuilder.build(i, j,
-                                turretShop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5)));
+                                shop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5)));
                     }
                 });
                 mapGridPane.add(tmpTurretVBox, i, j);
@@ -180,6 +174,6 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         }
         turretBoxes[x][y] = new MapTileBox(map.getTurret(x, y));
         mapGridPane.add(turretBoxes[x][y].getVBox(), x, y);
-        turretBoxes[x][y].getVBox().setOnMouseClicked(Action -> turretObserver.updateVBox(map.getTurret(x, y)));
+        turretBoxes[x][y].getVBox().setOnMouseClicked(Action -> shop.turretTracker.updateVBox(map.getTurret(x, y)));
     }
 }
