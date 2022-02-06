@@ -21,28 +21,31 @@ public class MainLoop implements Runnable {
     private final Random random;
     public final WaveBuilder waveBuilder;
     private final MeteorHandler meteorHandler;
-
+    private boolean isStarted;
 
     public MainLoop(PlayerValues playerValues, MapVisualizer mapVisualizer, Map map) {
         this.playerValues = playerValues;
         this.mapVisualizer = mapVisualizer;
         this.map = map;
         this.random = new Random();
-        this.meteorHandler = new MeteorHandler(System.currentTimeMillis(),map);
+        this.meteorHandler = new MeteorHandler(System.currentTimeMillis(), map);
         meteorHandler.addObserver(mapVisualizer);
         waveBuilder = new WaveBuilder();
+        isStarted = false;
     }
 
     private void addNewEnemies() {
-        EnemyType enemyType = waveBuilder.getEnemy(System.currentTimeMillis());
-        if (enemyType != null) {
-            Enemy enemy = new Enemy(enemyType, waveBuilder.getWaveCounter(), System.currentTimeMillis(), map, map.getTurretsList());
-            enemy.addObserver(mapVisualizer);
-            map.addEnemy(enemy);
-        }
-        if (map.getEnemies().isEmpty()) {
-            waveBuilder.newWave();
-            playerValues.setWaveNumber(waveBuilder.getWaveCounter());
+        if (isStarted) {
+            EnemyType enemyType = waveBuilder.getEnemy(System.currentTimeMillis());
+            if (enemyType != null) {
+                Enemy enemy = new Enemy(enemyType, waveBuilder.getWaveCounter(), System.currentTimeMillis(), map, map.getTurretsList());
+                enemy.addObserver(mapVisualizer);
+                map.addEnemy(enemy);
+            }
+            if (map.getEnemies().isEmpty()) {
+                waveBuilder.newWave();
+                playerValues.setWaveNumber(waveBuilder.getWaveCounter());
+            }
         }
     }
 
@@ -68,6 +71,10 @@ public class MainLoop implements Runnable {
         }
     }
 
+    public void start() {
+        isStarted = true;
+    }
+
     public void calcTurrets() {
         for (AbstractTurret turret : map.getTurretsList()) {
             List<Vector2d> firePos = turret.fire(currentTimeMillis());
@@ -87,7 +94,7 @@ public class MainLoop implements Runnable {
             addNewEnemies();
             moveEnemies();
             calcTurrets();
-            meteorHandler.calcMeteors(System.currentTimeMillis(), map.getMeteorListAndClear() );
+            meteorHandler.calcMeteors(System.currentTimeMillis(), map.getMeteorListAndClear());
             Platform.runLater(mapVisualizer);
             try {
                 Thread.sleep(10);

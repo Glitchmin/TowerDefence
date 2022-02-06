@@ -6,15 +6,15 @@ import Code.gui.ITurretChangeObserver;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.out;
+
 public class TurretBuilder {
-    private Map map;
-    private PlayerValues playerValues;
-    private final List<ITurretChangeObserver> observersList;
+    private final Map map;
+    private final PlayerValues playerValues;
 
     public TurretBuilder(Map map, PlayerValues playerValues) {
         this.map = map;
         this.playerValues = playerValues;
-        observersList = new ArrayList<>();
     }
 
     public void build(int x, int y, AbstractTurret turret) {
@@ -30,6 +30,11 @@ public class TurretBuilder {
         if (playerValues.getGold() >= turret.cost) {
             playerValues.removeGold(turret.cost);
             turret.upgrade();
+        }
+    }
+    public void multiUpgrade(AbstractTurret turret){
+        while (playerValues.getGold() >= turret.cost) {
+            upgrade(turret);
         }
     }
 }

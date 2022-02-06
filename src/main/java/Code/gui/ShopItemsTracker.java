@@ -32,6 +32,12 @@ public class ShopItemsTracker {
                     turretBuilder.upgrade(turret);
                     updateVBox(turret);
                 });
+                Button multiUpgradeButton = new Button("upgrade for all money");
+                vBox.getChildren().add(multiUpgradeButton);
+                multiUpgradeButton.setOnAction(Action -> {
+                    turretBuilder.multiUpgrade(turret);
+                    updateVBox(turret);
+                });
             }
             return;
         }

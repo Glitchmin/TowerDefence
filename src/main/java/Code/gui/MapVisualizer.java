@@ -25,6 +25,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private final Shop shop;
     private final Label landscapeNameOnCursorLabel;
     private final TurretBuilder turretBuilder;
+    private final SpellCaster spellCaster;
     private VBox tmpTurretVBox;
     private Circle tmpSpellCircle;
     private final TreeMap<Integer, ImageView> enemyImages;
@@ -40,7 +41,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private final TreeMap<Integer, Circle> meteorShades;
 
 
-    public MapVisualizer(Map map, Pane paneOfEverything, Shop shop, TurretBuilder turretBuilder, Integer guiElementBoxWidth, Integer guiElementBoxHeight, Double tileSize) {
+    public MapVisualizer(Map map, Pane paneOfEverything, Shop shop, TurretBuilder turretBuilder, SpellCaster spellCaster, Integer guiElementBoxWidth, Integer guiElementBoxHeight, Double tileSize) {
         enemyImages = new TreeMap<>();
         meteorImages = new TreeMap<>();
         meteorShades = new TreeMap<>();
@@ -52,6 +53,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
         this.map = map;
         this.shop = shop;
         this.turretBuilder = turretBuilder;
+        this.spellCaster = spellCaster;
         this.enemiesToRender = new ArrayList<>();
         this.meteorsToRender = new ArrayList<>();
         this.linesList = new ArrayList<>();
@@ -136,7 +138,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
                 paneOfEverything.getChildren().add(tmpSpellCircle);
                 if (shop.getSelectedSpell() == SpellType.METEOR) {
                     MeteorSpell meteorSpell = (MeteorSpell) shop.getSelectedSpell().getNewSpell(mousePosition);
-                    tmpSpellCircle.setOnMouseClicked(Action -> map.addMeteor(meteorSpell.getMeteor(mousePosition)));
+                    tmpSpellCircle.setOnMouseClicked(Action -> spellCaster.castSpell(meteorSpell,mousePosition));
                 }
             }
             tmpSpellCircle.toFront();

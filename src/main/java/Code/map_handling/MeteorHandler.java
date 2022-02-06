@@ -31,7 +31,7 @@ public class MeteorHandler {
     public void calcMeteors(long time, List<Meteor> meteorList1){
         meteorList.addAll(meteorList1);
         for (Meteor meteor: meteorList){
-            meteor.h -= 2*(double)(time-lastTimeCalc)/1000;
+            meteor.h -= 5*(double)(time-lastTimeCalc)/1000;
             if (meteor.h<=0){
                 for(Enemy enemy: map.getEnemies()){
                     if (enemy.isInRange(meteor.position, meteor.radius)){

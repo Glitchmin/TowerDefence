@@ -13,7 +13,7 @@ public class Meteor {
     private static Integer meteorCounter = 0;
 
     public Meteor(Vector2d position, double dmg, long freezeTime, double radius) {
-        this.h = 3.0;
+        this.h = 4.0;
         this.dmg = dmg;
         this.freezeTime = freezeTime;
         this.radius = radius;
