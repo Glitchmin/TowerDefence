@@ -84,7 +84,7 @@ public class MainLoop implements Runnable {
                 for (Vector2d pos : firePos) {
                     if (turret instanceof LaserTurret) {
                         mapVisualizer.addLine(turret.getPosition(), pos, Color.RED);
-                    }else{
+                    } else {
                         mapVisualizer.addLine(turret.getPosition(), pos, Color.YELLOW);
                     }
                 }

@@ -53,9 +53,11 @@ public class App extends Application {
         Thread mainLoopThread = new Thread(mainLoop);
 
         Button startButton = new Button("start!");
-        gridPaneOfEverything.add(startButton,0,2);
-        startButton.setOnAction(Action -> {gridPaneOfEverything.getChildren().remove(startButton);
-            mainLoop.start();});
+        gridPaneOfEverything.add(startButton, 0, 2);
+        startButton.setOnAction(Action -> {
+            gridPaneOfEverything.getChildren().remove(startButton);
+            mainLoop.start();
+        });
         mainLoopThread.start();
 
     }

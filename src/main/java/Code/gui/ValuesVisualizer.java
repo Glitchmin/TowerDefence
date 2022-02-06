@@ -19,16 +19,16 @@ public class ValuesVisualizer implements IPlayerValuesChangeObserver {
     }
 
     public VBox getLabelsVBox() {
-        return new VBox(goldLabel,waveLabel, healthLabel);
+        return new VBox(goldLabel, waveLabel, healthLabel);
     }
 
     @Override
     public void valuesChanged() {
-        goldLabel.setText("gold: "+playerValues.getGold());
-        healthLabel.setText("health: "+playerValues.getHealth());
-        waveLabel.setText("wave: "+playerValues.getWaveNumber());
-        if (playerValues.getWaveNumber()==null){
-            waveLabel.setText("wave: "+0);
+        goldLabel.setText("gold: " + playerValues.getGold());
+        healthLabel.setText("health: " + playerValues.getHealth());
+        waveLabel.setText("wave: " + playerValues.getWaveNumber());
+        if (playerValues.getWaveNumber() == null) {
+            waveLabel.setText("wave: " + 0);
         }
     }
 }

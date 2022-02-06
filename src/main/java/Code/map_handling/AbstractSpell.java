@@ -1,6 +1,5 @@
 package Code.map_handling;
 
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public abstract class AbstractSpell implements IShopElement {

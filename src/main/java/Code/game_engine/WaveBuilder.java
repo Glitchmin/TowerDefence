@@ -31,14 +31,14 @@ public class WaveBuilder {
             Enemy enemyToAdd = new Enemy(EnemyType.values()[random.nextInt(EnemyType.values().length)]);
             if (enemyToAdd.getGoldDrop() <= goldToSpend) {
                 enemies.add(enemyToAdd.getEnemyType());
-                goldToSpend-=enemyToAdd.getGoldDrop();
+                goldToSpend -= enemyToAdd.getGoldDrop();
             }
         }
         goldForWave = (int) (goldForWave * 1.2);
     }
 
     public EnemyType getEnemy(long currentTime) {
-        if (currentTime-lastTimeDeployed >= deployDelay) {
+        if (currentTime - lastTimeDeployed >= deployDelay) {
             if (!enemies.isEmpty()) {
                 lastTimeDeployed = currentTime;
                 EnemyType enemyType = enemies.get(0);

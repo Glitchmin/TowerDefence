@@ -8,8 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import static java.lang.System.out;
-
 public class ShopItemsTracker {
     private final VBox vBox;
     private final TurretBuilder turretBuilder;
@@ -41,7 +39,7 @@ public class ShopItemsTracker {
             }
             return;
         }
-        if (shopElement instanceof AbstractSpell spell){
+        if (shopElement instanceof AbstractSpell spell) {
             vBox.getChildren().add(new Label(spell.getSpellType().getSpellName()));
             vBox.getChildren().add(spell.getDescriptionVBox());
             return;

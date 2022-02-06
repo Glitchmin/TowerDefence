@@ -68,16 +68,13 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
 
         landscapeBoxes = new MapTileBox[map.getWidth()][map.getHeight()];
         turretBoxes = new MapTileBox[map.getWidth()][map.getHeight()];
-
         for (int i = 0; i < map.getWidth(); i++) {
             for (int j = 0; j < map.getHeight(); j++) {
                 MapTileBox mapTileBox = new MapTileBox(map.getLandscape(i, j));
                 mapGridPane.add(mapTileBox.getVBox(), i, j);
                 landscapeBoxes[i][j] = mapTileBox;
                 mapTileBox.getVBox().setOnMouseEntered(Action ->
-                {
-                    handleCursorOnMapTile(mapTileBox);
-                });
+                        handleCursorOnMapTile(mapTileBox));
             }
         }
     }
@@ -126,7 +123,7 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
             for (int j = 0; j < map.getHeight(); j++) {
                 if (mapTileBox == landscapeBoxes[i][j]) {
                     landscapeNameOnCursorLabel.setText
-                            (map.getLandscape(i, j).landscapeType.toString() + " (" + i + "," + j + ")");
+                            (map.getLandscape(i, j).getLandscapeType().toString() + " (" + i + "," + j + ")");
                 }
             }
         }
@@ -182,11 +179,11 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
     private void addTurret() {
         int i = mousePosition.IntX();
         int j = mousePosition.IntY();
-        if (map.getLandscape(i, j).landscapeType == LandscapeType.GRASS
-                || map.getLandscape(i, j).landscapeType == LandscapeType.HILL) {
+        if (map.getLandscape(i, j).getLandscapeType() == LandscapeType.GRASS
+                || map.getLandscape(i, j).getLandscapeType() == LandscapeType.HILL) {
             turretBuilder.build(i, j,
                     shop.getSelectedTurret().getNewTurret(new Vector2d(i + 0.5, j + 0.5),
-                            map.getLandscape(i, j).landscapeType == LandscapeType.HILL));
+                            map.getLandscape(i, j).getLandscapeType() == LandscapeType.HILL));
         }
     }
 

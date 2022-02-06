@@ -1,8 +1,9 @@
 package Code.map_handling;
 
 public class Landscape extends AbstractMapObject {
-    public LandscapeType landscapeType; //TODO private
-    public Landscape(LandscapeType landscapeType){
+    private LandscapeType landscapeType;
+
+    public Landscape(LandscapeType landscapeType) {
         this.landscapeType = landscapeType;
     }
 
@@ -14,4 +15,5 @@ public class Landscape extends AbstractMapObject {
     public LandscapeType getLandscapeType() {
         return landscapeType;
     }
+
 }

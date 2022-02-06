@@ -30,6 +30,6 @@ public class MeteorSpell extends AbstractSpell implements IShopElement {
     @Override
     public VBox getDescriptionVBox() {
         return new VBox(new Label("damage: " + meteor.getDmg()), new Label("damage radius: " + meteor.getRadius()),
-                new Label("stun time: " + (double)meteor.getFreezeTime()/1000+" s"), new Label("cost: " + cost));
+                new Label("stun time: " + (double) meteor.getFreezeTime() / 1000 + " s"), new Label("cost: " + cost));
     }
 }

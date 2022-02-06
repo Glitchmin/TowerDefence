@@ -6,8 +6,6 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
-import static java.lang.System.out;
-
 public abstract class AbstractTurret extends AbstractMapObject implements IEnemyChangeObserver, IShopElement {
     protected Double range;
     protected Integer cost;
@@ -15,9 +13,13 @@ public abstract class AbstractTurret extends AbstractMapObject implements IEnemy
     protected Integer level = 1;
     protected boolean isOnMap = false;
     protected boolean isOnHill = false;
+
     public abstract String getTurretName();
+
     public abstract VBox getDescriptionVBox();
+
     public abstract void upgrade();
+
     protected List<Enemy> targets;
 
 
@@ -25,15 +27,15 @@ public abstract class AbstractTurret extends AbstractMapObject implements IEnemy
 
     @Override
     public void enemyChanged(Enemy enemy) {
-        if (enemy.isInRange(position, range) && !targets.contains(enemy)){
+        if (enemy.isInRange(position, range) && !targets.contains(enemy)) {
             targets.add(enemy);
         }
-        if (!enemy.isInRange(position, range) || enemy.isDead() || enemy.reachedEnd()){
+        if (!enemy.isInRange(position, range) || enemy.isDead() || enemy.reachedEnd()) {
             targets.remove(enemy);
         }
     }
 
-    public boolean isOnMap(){
+    public boolean isOnMap() {
         return isOnMap;
     }
 

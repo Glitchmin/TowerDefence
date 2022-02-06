@@ -23,15 +23,15 @@ public class SnowballRain extends AbstractSpell {
         spellType = SpellType.METEOR;
     }
 
-    public List<Meteor> getMeteorList(Vector2d position){
+    public List<Meteor> getMeteorList(Vector2d position) {
         Random random = new Random();
         List<Meteor> meteorList = new ArrayList<>();
-        for (int i=0; i<numberOfSnowballs;i++){
-            Vector2d pos = new Vector2d(position.x+(double)random.nextInt((int)(16*radius))/10-(double)((int)(8*radius))/10,
-                    position.y+(double)random.nextInt((int)(16*radius))/10-(double)((int)(8*radius))/10);
+        for (int i = 0; i < numberOfSnowballs; i++) {
+            Vector2d pos = new Vector2d(position.x + (double) random.nextInt((int) (16 * radius)) / 10 - (double) ((int) (8 * radius)) / 10,
+                    position.y + (double) random.nextInt((int) (16 * radius)) / 10 - (double) ((int) (8 * radius)) / 10);
             Meteor meteor1 = new Meteor(pos, meteor.getDmg(), meteor.getFreezeTime(),
                     meteor.getRadius(), SpellType.SNOWBALL_RAIN);
-            meteor1.setH(3.0+(double)random.nextInt(120)/10);
+            meteor1.setH(3.0 + (double) random.nextInt(120) / 10);
             meteorList.add(meteor1);
 
         }
@@ -46,6 +46,6 @@ public class SnowballRain extends AbstractSpell {
     @Override
     public VBox getDescriptionVBox() {
         return new VBox(new Label("damage: " + meteor.getDmg()), new Label("damage radius: " + meteor.getRadius()),
-                new Label("stun time: " + (double)meteor.getFreezeTime()/1000+" s"), new Label("cost: " + cost));
+                new Label("stun time: " + (double) meteor.getFreezeTime() / 1000 + " s"), new Label("cost: " + cost));
     }
 }

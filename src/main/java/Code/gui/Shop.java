@@ -18,7 +18,7 @@ public class Shop {
     private final GridPane spellsGridPane;
     private final VBox shopVBox;
     private final Integer imageSize;
-    private ImageView mark;
+    private final ImageView mark;
     private TurretType selectedTurret;
     private SpellType selectedSpell;
     public final ShopItemsTracker shopItemsTracker;
@@ -74,7 +74,7 @@ public class Shop {
             if (shopElement instanceof MeteorSpell) {
                 selectedSpell = SpellType.METEOR;
             }
-            if (shopElement instanceof SnowballRain){
+            if (shopElement instanceof SnowballRain) {
                 selectedSpell = SpellType.SNOWBALL_RAIN;
             }
             shopItemsTracker.updateVBox(selectedSpell.getNewSpell(null));
