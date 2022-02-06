@@ -22,6 +22,7 @@ public class MainLoop implements Runnable {
     private final MapVisualizer mapVisualizer;
     private final Map map;
     private final Random random;
+    public final WaveBuilder waveBuilder;
 
 
     public MainLoop(PlayerValues playerValues, MapVisualizer mapVisualizer, Map map) {
@@ -29,13 +30,21 @@ public class MainLoop implements Runnable {
         this.mapVisualizer = mapVisualizer;
         this.map = map;
         this.random = new Random();
+        waveBuilder = new WaveBuilder();
     }
 
-    private void addEnemy(){
-        Enemy enemy = new Enemy(EnemyType.RUNNER, System.currentTimeMillis(), map, map.getTurretsList());
-        enemy.addObserver(mapVisualizer);
-        map.addEnemy(enemy);
+    private void addNewEnemies(){
+        EnemyType enemyType = waveBuilder.getEnemy(System.currentTimeMillis());
+        if (enemyType != null) {
+            Enemy enemy = new Enemy(enemyType,waveBuilder.getWaveCounter(), System.currentTimeMillis(), map, map.getTurretsList());
+            enemy.addObserver(mapVisualizer);
+            map.addEnemy(enemy);
+        }
+        if (map.getEnemies().isEmpty()){
+            waveBuilder.newWave();
+        }
     }
+
 
     private void moveEnemies() {
         List<Enemy> enemiesToDelete = new ArrayList<>();
@@ -72,16 +81,14 @@ public class MainLoop implements Runnable {
 
     @Override
     public void run() {
-        addEnemy();
-        addEnemy();
-        map.getEnemies().get(0).freeze(1000);
         while (!playerValues.isPlayerDead()) {
             mapVisualizer.updateTime(System.currentTimeMillis());
+            addNewEnemies();
             moveEnemies();
             calcTurrets();
             Platform.runLater(mapVisualizer);
             try {
-                Thread.sleep(3);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 out.println("Interrupted Threat Simulation Engine");
                 e.printStackTrace();

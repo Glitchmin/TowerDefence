@@ -146,7 +146,6 @@ public class Map {
             turretsArray[x][y] = turret;
             turretsList.add(turret);
             for (Enemy enemy: getEnemies()){
-                out.println("added observer");
                 enemy.addObserver(turret);
             }
             turretChanged(x, y);

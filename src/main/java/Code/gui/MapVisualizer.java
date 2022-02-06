@@ -151,11 +151,11 @@ public class MapVisualizer implements ITurretChangeObserver, IEnemyChangeObserve
                     enemyImageView = new ImageView(ImageLoader.loadImage(enemy.getEnemyType().getResourcePath()));
                     enemyImages.put(enemy.getID(), enemyImageView);
                     paneOfEverything.getChildren().add(enemyImages.get(enemy.getID()));
-                    enemyImageView.setFitHeight(20);
-                    enemyImageView.setFitWidth(20);
+                    enemyImageView.setFitHeight(26);
+                    enemyImageView.setFitWidth(26);
                 }
-                enemyImageView.setX(enemy.getPosition().x * tileSize - 10);
-                enemyImageView.setY(enemy.getPosition().y * tileSize - 10);
+                enemyImageView.setX(enemy.getPosition().x * tileSize - 13);
+                enemyImageView.setY(enemy.getPosition().y * tileSize - 13);
                 if (enemy.reachedEnd() || enemy.isDead()) {
                     paneOfEverything.getChildren().remove(enemyImageView);
                     enemyImages.remove(enemy.getID());
