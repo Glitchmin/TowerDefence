@@ -5,6 +5,8 @@ import Code.map_handling.AbstractTurret;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +46,9 @@ public class LaserTurret extends AbstractTurret {
         if (isOnHill) {
             hillText = "placed on a hill (+0.5 range)";
         }
-        return new VBox(new Label("range: " + range), new Label("dmg: " + dmg),
+        DecimalFormat dec = new DecimalFormat("#0.0");
+        dec.setRoundingMode(RoundingMode.HALF_UP);
+        return new VBox(new Label("range: " + dec.format(range)), new Label("dmg: " + dmg),
                 new Label("attack speed: " + rpm + " rpm"), new Label("cost: " + cost),
                 new Label("level: " + level), new Label(hillText));
     }

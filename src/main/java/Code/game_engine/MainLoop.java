@@ -103,7 +103,7 @@ public class MainLoop implements Runnable {
             meteorHandler.calcMeteors(System.currentTimeMillis(), map.getMeteorListAndClear());
             Platform.runLater(mapVisualizer);
             try {
-                Thread.sleep(10);
+                Thread.sleep(3);
             } catch (InterruptedException e) {
                 out.println("Interrupted Threat Simulation Engine");
                 e.printStackTrace();
